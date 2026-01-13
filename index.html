@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ほびあか感想 じぇねれーたー</title>
+  <style>
+    :root{
+      --bg1:#fff0f7;
+      --bg2:#ffe3f1;
+      --card:#ffffffcc;
+      --border:#ffd0e7;
+      --accent:#ff7fbe;
+      --text:#4b2b3c;
+      --shadow: 0 12px 30px rgba(255, 127, 190, .18);
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(900px 520px at 15% 0%, var(--bg2), transparent 55%),
+        radial-gradient(900px 520px at 85% 20%, #ffeef7, transparent 60%),
+        linear-gradient(180deg, var(--bg1), #fff);
+      min-height:100svh;
+    }
+    .wrap{ max-width:720px; margin:0 auto; padding:18px 14px 28px; }
+    .title{
+      padding:14px;
+      border:1px solid var(--border);
+      border-radius:18px;
+      background:var(--card);
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(6px);
+    }
+    h1{ margin:0; font-size:18px; letter-spacing:.02em; }
+    .sub{ margin:6px 0 0; font-size:12px; opacity:.78; line-height:1.5; }
+
+    .card{
+      margin-top:12px;
+      padding:14px;
+      border:1px solid var(--border);
+      border-radius:18px;
+      background:var(--card);
+      box-shadow:var(--shadow);
+      backdrop-filter: blur(6px);
+    }
+    label{ display:block; font-size:12px; margin:0 0 6px; opacity:.9; }
+    textarea{
+      width:100%;
+      border:1px solid #ffd8ea;
+      border-radius:16px;
+      padding:12px 12px;
+      font-size:16px;
+      line-height:1.55;
+      background:#fff;
+      outline:none;
+    }
+    textarea:focus{
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(255,127,190,.22);
+    }
+
+    .row{ display:flex; gap:10px; margin-top:10px; }
+    button{
+      flex:1;
+      border:0;
+      border-radius:16px;
+      padding:12px 10px;
+      font-size:15px;
+      font-weight:800;
+      cursor:pointer;
+      color:#fff;
+      background: linear-gradient(180deg, var(--accent), #ff5fb0);
+      box-shadow: 0 10px 22px rgba(255,95,176,.22);
+      transition: transform .05s ease;
+      touch-action: manipulation;
+    }
+    button:active{ transform: translateY(1px); }
+    .ghost{
+      background:#fff;
+      color:var(--text);
+      border:1px solid var(--border);
+      box-shadow:none;
+      font-weight:800;
+    }
+    .hint{ margin:10px 2px 0; font-size:12px; opacity:.75; line-height:1.5; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="title">
+      <h1>ほびあか感想 じぇねれーたー</h1>
+      <p class="sub">入力は「ふつうのかんそう」だけ。出力はついーとふうにするよ。</p>
+    </header>
+
+    <section class="card">
+      <label for="input">ふつうのかんそう</label>
+      <textarea id="input" rows="4" placeholder="例：昨日のライブ本当に楽しかった。席もよくてファンサもらえた。"></textarea>
+      <div class="row">
+        <button id="gen">へんかん</button>
+        <button id="clear" class="ghost">けす</button>
+      </div>
+      <p class="hint">※げんぶんは そのまま しゅつりょくに つかわないよ（ふんいきだけ みてる）</p>
+    </section>
+
+    <section class="card">
+      <label for="output">へんかんご</label>
+      <textarea id="output" rows="7" readonly placeholder="ここにでるよ"></textarea>
+      <div class="row">
+        <button id="copy">ここをこぴー</button>
+        <button id="regen" class="ghost">べつぱたーん</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+
+    // 固定名（入力欄なし）
+    const ME = "わたし";
+    const OSHI = "推し";
+
+    // かわいい顔文字（絵文字なし）
+    const KAO = [
+      "(>_<)",
+      "( ；； )",
+      "(;_;)",
+      "(｡•ㅅ•｡)",
+      "(っ˘꒳˘c)",
+      "(つ≧▽≦)つ",
+      "( ᵕ̩̩ㅅᵕ̩̩ )",
+      "(՞ ̥_ ̫ _ ̥՞)",
+      "ᐡ｡› ·̫ ‹｡ᐡ",
+      "^ ̳ට ̫ ට ̳^",
+      "໒꒰ྀི ∩˃ ᵕ ˂∩ ꒱ྀི১",
+      "(⸝⸝ᵕᴗᵕ⸝⸝)"
+    ];
+
+    // 語録（必要なやつを濃いめに）
+    const W = {
+      core: ["過去一更新", "答え合わせ", "ふたりぼっちの世界", "特等席", "ずるい", "とくベチュ", "だいてんさいさん", "はなまる", "大満足"],
+      body: ["顔ない", "心臓くるしー", "心臓とくんとする", "記憶喪失レベル", "しんだ", "にんまり", "抱えきれないしあわせ"],
+      soft: ["ほーーんまに", "きのー", "きょー", "まじで", "むり", "すき", "しあわせ"],
+      thanks: ["見つけてくれて", "好きでいさせてくれてありがとう", "いっぱいありがとう"]
+    };
+
+    function pick(arr, n=1){
+      const a = [...arr];
+      const out = [];
+      while(out.length < n && a.length){
+        out.push(a.splice(Math.floor(Math.random()*a.length),1)[0]);
+      }
+      return out;
+    }
+
+    // 入力は「引用しない」けど、雰囲気判定だけに使う
+    function detect(input){
+      const s = (input || "");
+      return {
+        idol: /アイドル|推し|かっこ|かわい|天才|神|最強|すご/.test(s),
+        live: /ライブ|現場|公演|コンサート|ステージ/.test(s),
+        seat: /席|近|前|良/.test(s),
+        fan: /ファンサ|レス|見つけ|目が合|目合/.test(s),
+        hard: /無理|しんど|死|やば/.test(s)
+      };
+    }
+
+    // Few-shotっぽい短文テンプレ（原文は混ぜない）
+    function build(input){
+      const f = detect(input);
+      const k = pick(KAO, 2);
+      const a = pick(W.core, 3);
+      const b = pick(W.body, 2);
+      const s = pick(W.soft, 2);
+      const t = pick(W.thanks, 1);
+
+      // 1: 「マジでよくできたアイドル」系（短い賛美）
+      const shortPraise = [
+        `${s[0]}ちゃれどるすぎる${k[0]} もう${OSHI}さん、${a[2]}でしょ…`,
+        `${OSHI}、${s[0]}しごできすぎて${k[0]} ${ME}の情緒どーするの…${s[1]}。`,
+        `${OSHI}が${a[2]}すぎる${k[0]} すき。`
+      ];
+
+      // 2: ライブ・現場系（2〜3文で濃いめ）
+      const liveTweet = [
+        `${f.live ? "きのーの公演" : "きょー"}、${a[0]}すぎて${b[1]}${k[0]}`,
+        `${f.fan || f.seat ? "天井覚悟だったのに" : "まさかの"} ${OSHI}の${a[1]}すぎて${b[0]}…`,
+        `${a[2]}だったし、${t[0]}の反則。${OSHI}ほんと${a[2]}。${k[1]}`
+      ].join(" ");
+
+      // 3: 「かっこよすぎて無理」系（感情崩壊）
+      const meltdown = [
+        `${OSHI}かっこよすぎて${b[0]}${k[0]}`,
+        `${b[1]}だし、どーしてそんなに${ME}のこと困らせるの…？`,
+        `${s[0]}${s[1]}…すき。${k[1]}`
+      ].join(" ");
+
+      // 条件分岐：現場・ファンサ・席があればライブ優先、hardが強ければ崩壊寄り、それ以外は短賛美
+      if (f.live || f.fan || f.seat) return liveTweet;
+      if (f.hard) return meltdown;
+      if (f.idol) return pick(shortPraise, 1)[0];
+
+      // 汎用（でもホビ垢っぽく）
+      return `${OSHI}のこと考えたら${a[0]}になって${b[1]}${k[0]} ${ME}なんて…なのに${a[2]}くれるのずるい。すき。${k[1]}`;
+    }
+
+    function generate(){
+      const input = $("input").value.trim();
+      $("output").value = build(input);
+    }
+
+    $("gen").addEventListener("click", generate);
+
+    $("regen").addEventListener("click", () => {
+      // 同じ入力でも別パターン出したい
+      if (!$("input").value.trim()) return;
+      $("output").value = build($("input").value.trim());
+    });
+
+    $("clear").addEventListener("click", () => {
+      $("input").value = "";
+      $("output").value = "";
+      $("input").focus();
+    });
+
+    $("copy").addEventListener("click", async () => {
+      const text = $("output").value.trim();
+      if(!text) return;
+      await navigator.clipboard.writeText(text);
+      $("copy").textContent = "こぴーした";
+      setTimeout(() => ($("copy").textContent = "ここをこぴー"), 1100);
+    });
+  </script>
+</body>
+</html>
