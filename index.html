@@ -10,8 +10,10 @@
   <meta property="og:title" content="ホビ垢構文ジェネレータ♡" />
   <meta property="og:description" content="普通の文章をホビ垢特有の激重構文に変換するサイトです。" />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://github.com/kanna-code/hobby-account/" />
-  <meta property="og:image" content="https://github.com/kanna-code/hobby-account/blob/main/ogp.png" />
+  <meta property="og:url" content="https://kanna-code.github.io/hobby-account/" />
+  <meta property="og:image" content="https://kanna-code.github.io/hobby-account/ogp.png" />
+  <meta name="twitter:image" content="https://kanna-code.github.io/hobby-account/ogp.png" />
+
 
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="ホビ垢構文ジェネレータ♡" />
@@ -105,21 +107,21 @@
 <body>
   <main class="wrap">
     <header class="title">
-      <h1>ほびあか感想 じぇねれーたー</h1>
-      <p class="sub">入力は「ふつうのかんそう」だけ。出力はついーとふうにするよ。</p>
+      <h1>ホビ垢構文ジェネレータ♡</h1>
+      <p class="sub">入力は「普通の感想」だけ。出力はホビ垢っぽくするよ。</p>
     </header>
 
     <section class="card">
       <label for="input">ふつうのかんそう</label>
       <textarea id="input" rows="4" placeholder="例：昨日のライブ本当に楽しかった。席もよくてファンサもらえた。"></textarea>
       <div class="row">
-        <button id="gen">へんかん</button>
-        <button id="clear" class="ghost">けす</button>
+        <button id="gen">変換</button>
+        <button id="clear" class="ghost">消す</button>
       </div>
     </section>
 
     <section class="card">
-      <label for="output">へんかんご</label>
+      <label for="output">変換後</label>
       <textarea id="output" rows="7" readonly placeholder="ここにでるよ"></textarea>
       <div class="row">
         <button id="copy">ここをこぴー</button>
@@ -155,7 +157,7 @@
     const W = {
       core: ["過去一更新", "答え合わせ", "ふたりぼっちの世界", "特等席", "ずるい", "とくベチュ", "だいてんさいさん", "はなまる", "大満足"],
       body: ["顔ない", "心臓くるしー", "心臓とくんとする", "記憶喪失レベル", "しんだ", "にんまり", "抱えきれないしあわせ"],
-      soft: ["ほーーんまに", "きのー", "きょー", "まじで", "むり", "すき", "しあわせ"],
+      soft: ["ほーーんまに",  "まじで", "むり", "すき", "しあわせ"],
       thanks: ["見つけてくれて", "好きでいさせてくれてありがとう", "いっぱいありがとう"]
     };
 
