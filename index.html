@@ -7,9 +7,188 @@
 <title>ホビ垢構文変換ちゃん🎀</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Kosugi+Maru&display=swap" rel="stylesheet">
-<!-- データ定義 & 変換ロジック -->
-<script src="data.js"></script>
-<script src="converter.js"></script>
+<script>
+// ============================================================
+//  data.js  語録・ハートカラー・絵文字定義
+// ============================================================
+const HEART_COLORS = [
+  {name:"ピンク",              heart:"🩷"},
+  {name:"レッド",              heart:"❤️"},
+  {name:"オレンジ",            heart:"🧡"},
+  {name:"イエロー",            heart:"💛"},
+  {name:"グリーン",            heart:"💚"},
+  {name:"ライトブルー",        heart:"🩵"},
+  {name:"ブルー",              heart:"💙"},
+  {name:"パープル",            heart:"💜"},
+  {name:"ホワイト",            heart:"🤍"},
+  {name:"ブラック",            heart:"🖤"},
+  {name:"ブラウン",            heart:"🤎"},
+  {name:"グレー",              heart:"🩶"},
+  {name:"レッドリボン",        heart:"❤️‍🔥"},
+  {name:"スパークル",          heart:"💖"},
+  {name:"ドット",              heart:"💗"},
+  {name:"カーリー",            heart:"💓"},
+  {name:"アロー",              heart:"💘"},
+  {name:"エクスクラメーション",heart:"❣️"},
+];
+const KAOMOJI = [
+  "ദ്ദിᐢ- ̫-ᐢ₎","˘ ᴗ  ̫ ᴗ ˘","ᐡ• ·̫ •̥ᐡ","( ᴖ ̫ᴖ )",
+  "ᐡ⸝⸝⊃ ·̭ •̥ ⸝⸝ᐡ","ᵕ ̥_ .̫ _ ̥ᵕ","꒰ – ·̫ – ꒱ﾉ",
+  "(ᐡ｡› ·̫ ‹｡ᐡ )੭","(ᐡㅠ ‧̫ ㅠᐡ)","ᐡ⸝⸝> ·̫ <⸝⸝ᐡ"
+];
+const EMOJI_PAIRS = [
+  "👼🏻💞","🆗💘","👶🏻🎀","😽💞","🪄✨","🐻‍❄️🩵",
+  "✊🏻🌟","😭👈🏻","🆙💖","🥲🩶","🐑💤","🍒💬",
+  "💯✨","🎀🩶","💭🎀","😻❤️‍🔥","🤩💖","🥂🫧",
+  "😿🌀","🤝🏻🌟","🍼🩵","💮✨","😭⤴️"
+];
+const VOCAB = {
+  greeting:     ["ずっしょ","にっこり","出席確認","答え合わせ","浮かれぽんち",
+                 "モチベなくて","今日行くか迷ったんだけど","ふたりぼっちの世界","しんだ","満身創痍"],
+  praise:       ["にゃーーいすき","できる男","しごでき","あまあま","ゲロ甘",
+                 "いとちー","とくベチュ","はなまる","だいてんさいさん",
+                 "ときめきこんてんChu","大满足","だいすきだいすき"],
+  thanks:       ["見つけてくれて","覚えてくれて","一生忘れられない","いちばん大切にしてくれて",
+                 "過去一時間使ってくれて","初めて見る顔してくれて","大満足させてくれる",
+                 "好きでいさせてくれてありがとう","しあわせ空間","いっぱいありがとう",
+                 "これからもずーっと","たくさん考えてくれて","抱えきれないしあわせ",
+                 "予想以上のことしてくれて","指名してくれた","戻ってきてくれて"],
+  bodyReaction: ["心臓くるしー","心臓とくんとする","にんまり","顔ない","帰り道",
+                 "抱えきれなくて幸せ歩いた","転げ落ちるくらいドカ笑いさせてくれて",
+                 "記憶喪失","すきすぎスキップ帰宅"],
+  special:      ["ひみつ","ずるい","特別","奇跡","リベンジ",
+                 "ここでいけると思ってなくてびっくりした","天井だったのに見つけてくれた",
+                 "行動で示してくれた","特等席","答え合わせ"],
+  negative:     ["納得いく反応じゃなかったけど","困らせちゃってごめんね",
+                 "わがままに付き合わせちゃってごめんね"],
+  oshiDynamic:  ["{O}も100点だった","{O}がしてくれること全部たからもの",
+                 "{O}だいすき増した","{O}の特等席！","{O}しか{S}のこと管理できない",
+                 "{O}が{S}のこと見る時の顔がいちばん好き","{S}を喜ばせる天才",
+                 "{S}のこと全部わかってる","{S}@しあわせもの",
+                 "頼んでないのに自分からやってくるのずるい","骨埋めた","墓立てた",
+                 "{O}しかいないんだ","{O}もせかいいちしあわせでいてほしい",
+                 "{S}のこと幸せにしてくれるひと"],
+};
+const DEFAULT_HASHTAGS = ["#ホビ垢構文ジェネレーター","#ホビ垢","#推し活"];
+
+// ============================================================
+//  converter.js  変換ロジック
+// ============================================================
+class HobiConverter {
+constructor({ vocab, emojiPairs, kaomoji }) {
+this.vocab      = vocab;
+this.emojiPairs = emojiPairs;
+this.kaomoji    = kaomoji;
+}
+_pickN(arr, n) {
+return […arr].sort(() => Math.random() - 0.5).slice(0, Math.min(n, arr.length));
+}
+_fillNames(t, o, s) {
+return t.replace(/{O}/g, o).replace(/{S}/g, s);
+}
+_analyzeInput(text) {
+return {
+isLive:       /ライブ|現場|コンサート|公演|舞台|イベ|チェキ|握手|対面/.test(text),
+isEyeContact: /目が合|見てくれ|見つけ|視線|指名/.test(text),
+isHappy:      /嬉し|幸せ|楽し|最高|よかっ|好き|かわい/.test(text),
+isSad:        /悲し|泣|辛|切な|苦し/.test(text),
+isSmile:      /笑|ニコ|にこ/.test(text),
+isRemembered: /覚え|名前/.test(text),
+};
+}
+buildPrompt({ inputText, selfName, oshiName, heartEmojis, intensity, emojiLevel, lineBreakLevel }) {
+const iRule = intensity <= 33 ? “感情表現はやや控えめ・読みやすさ重視”
+: intensity <= 66 ? “ホビ垢らしい感情表現・語録を適切に盛り込む”
+: “感情全開・語録最大活用・誇張表現多め・重ため”;
+const eRule = emojiLevel <= 33 ? “絵文字は文末に1〜2個”
+: emojiLevel <= 66 ? “絵文字は4〜6個（適度）”
+: “絵文字は8個以上・ほぼ毎フレーズにつける”;
+const lRule = lineBreakLevel <= 33 ? “改行少なめ・1〜2文まとめる”
+: lineBreakLevel <= 66 ? “3〜4フレーズごとに改行”
+: “1フレーズごとに改行・ホビ垢特有の細かいテンポ”;
+const heartNote = heartEmojis.length === 1
+? `ハートの絵文字は「${heartEmojis[0]}」を使う（メンバーカラー）`
+: `ハートの絵文字は「${heartEmojis.join("」「")}」をバランスよく混ぜて使う（メンバーカラー）`;
+const emojiSample = this._pickN(this.emojiPairs, 8).join(” “);
+const kaoSample   = this._pickN(this.kaomoji, 3).join(”  “);
+const greet = this._pickN(this.vocab.greeting, 3).join(”、”);
+const pr    = this._pickN(this.vocab.praise, 4).join(”、”);
+const th    = this._pickN(this.vocab.thanks, 4).join(”、”);
+const br    = this._pickN(this.vocab.bodyReaction, 3).join(”、”);
+const sp    = this._pickN(this.vocab.special, 3).join(”、”);
+const od    = this._pickN(this.vocab.oshiDynamic, 5)
+.map(t => this._fillNames(t, oshiName, selfName)).join(”、”);
+const ctx   = this._analyzeInput(inputText);
+const hints = [
+ctx.isLive       && “現場・イベント系”,
+ctx.isEyeContact && “目が合う・認識エピソード”,
+ctx.isHappy      && “ポジティブ感情”,
+ctx.isSad        && “ネガティブ感情”,
+ctx.isSmile      && “笑顔エピソード”,
+ctx.isRemembered && “覚えてもらったエピソード”,
+].filter(Boolean).join(”、”) || “特になし”;
+
+```
+return `あなたは「ホビ垢（趣味アカウント）」を運用しているオタクになりきり、感想をホビ垢構文に変換します。
+```
+
+## 設定
+
+- 自分の名前: ${selfName}
+- 推しの名前: ${oshiName}
+
+## ホビ垢構文の本質
+
+・感想ではなく「${selfName}と${oshiName}の関係性の物語」として語る
+・出来事を奇跡・特別なこととしてロマン化する
+・演者の行動を「${selfName}のためにしてくれた」として解釈する
+・「見つけてもらった」「覚えてもらった」体験を特別なイベントとして描写する
+・感情は誇張気味に（しんだ・記憶喪失・心臓くるしー・満身創痍など）
+・文法より気持ち優先・文が途中で途切れてもOK
+・ひらがな多用（だいすき・しあわせ・ありがとう・すきすぎ等）
+
+## 絵文字・顔文字ルール
+
+・${heartNote}
+・${eRule}
+・使用する絵文字ペア候補: ${emojiSample}
+・顔文字を文中に1〜2個自然に挿入: ${kaoSample}
+
+## 強度・形式ルール
+
+・強度: ${iRule}
+・${lRule}
+・毎回わずかに異なる表現にする（ゆらぎ必須）
+
+## 語録候補（文脈に合うものだけ）
+
+挨拶: ${greet} / 褒め: ${pr} / 感謝: ${th}
+身体反応: ${br} / 特別感: ${sp} / 推し×自分: ${od}
+
+## 入力文脈: ${hints}
+
+## 出力ルール
+
+・変換後の文章のみ（説明・前置き・注釈なし）
+・X投稿として自然に読める
+
+## 変換する感想
+
+${inputText}`; } async convert(params) { const prompt = this.buildPrompt(params); const res = await fetch("https://api.anthropic.com/v1/messages", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 1000, messages: [{ role: "user", content: prompt }], }), }); if (!res.ok) { const err = await res.json().catch(() => ({})); throw new Error(err.error?.message || `API Error ${res.status}`);
+}
+const data = await res.json();
+return data.content.map(b => b.text || “”).join(””).trim();
+}
+stats(text) {
+return {
+chars:  text.length,
+lines:  (text.match(/\n/g) || []).length + 1,
+emojis: (text.match(/[\u{1F300}-\u{1FFFF}\u{2600}-\u{27BF}]|⸝⸝⸝/gu) || []).length,
+};
+}
+}
+</script>
+
 <style>
 :root{
   --pk:#ffb7c5;--pk2:#f4889a;--pk3:#fff0f5;
@@ -143,6 +322,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.22)}
 @keyframes hA{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-75px) scale(1.45)}}
 .footer{text-align:center;margin-top:2.2rem;font-size:.68rem;color:var(--txs);opacity:.6;line-height:1.85}
 </style>
+
 </head>
 <body>
 <div class="app">
