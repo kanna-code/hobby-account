@@ -7,6 +7,9 @@
 <title>ホビ垢構文変換ちゃん🎀</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Kosugi+Maru&display=swap" rel="stylesheet">
+<!-- データ定義 & 変換ロジック -->
+<script src="data.js"></script>
+<script src="converter.js"></script>
 <style>
 :root{
   --pk:#ffb7c5;--pk2:#f4889a;--pk3:#fff0f5;
@@ -23,159 +26,129 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
              radial-gradient(ellipse 55% 65% at 92% 88%,rgba(201,168,224,.14) 0%,transparent 55%)}
 .deco{position:fixed;pointer-events:none;z-index:0;animation:fUp linear infinite;opacity:.08}
 @keyframes fUp{0%{transform:translateY(108vh) rotate(0deg);opacity:0}8%{opacity:.08}92%{opacity:.08}100%{transform:translateY(-18vh) rotate(540deg);opacity:0}}
-
 .app{position:relative;z-index:1;max-width:680px;margin:0 auto;padding:2rem 1.1rem 6rem}
-
 /* header */
 .hd{text-align:center;margin-bottom:2rem;animation:fD .7s ease both}
 @keyframes fD{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:none}}
-.hd-badge{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(128deg,var(–pk2),var(–pu));color:#fff;font-size:.65rem;font-weight:700;padding:4px 15px;border-radius:99px;letter-spacing:.12em;margin-bottom:.8rem}
+.hd-badge{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(128deg,var(--pk2),var(--pu));color:#fff;font-size:.65rem;font-weight:700;padding:4px 15px;border-radius:99px;letter-spacing:.12em;margin-bottom:.8rem}
 .hd h1{font-size:clamp(1.4rem,5vw,2rem);font-weight:700;line-height:1.3;margin-bottom:.4rem}
-.hd h1 em{font-style:normal;background:linear-gradient(128deg,var(–pk2),var(–pu));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hd-sub{font-size:.78rem;color:var(–txs);line-height:1.85}
-
+.hd h1 em{font-style:normal;background:linear-gradient(128deg,var(--pk2),var(--pu));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hd-sub{font-size:.78rem;color:var(--txs);line-height:1.85}
 /* card */
-.card{background:var(–wh);border-radius:var(–rb);padding:1.4rem 1.5rem;margin-bottom:.9rem;
-box-shadow:0 3px 22px var(–sh),0 1px 3px rgba(0,0,0,.03);
-border:1.5px solid rgba(255,183,197,.2);animation:fU .5s ease both}
+.card{background:var(--wh);border-radius:var(--rb);padding:1.4rem 1.5rem;margin-bottom:.9rem;
+  box-shadow:0 3px 22px var(--sh),0 1px 3px rgba(0,0,0,.03);
+  border:1.5px solid rgba(255,183,197,.2);animation:fU .5s ease both}
 @keyframes fU{from{opacity:0;transform:translateY(11px)}to{opacity:1;transform:none}}
 .card:nth-child(2){animation-delay:.06s}.card:nth-child(3){animation-delay:.11s}
 .card:nth-child(4){animation-delay:.16s}.card:nth-child(5){animation-delay:.21s}
-
-.ct{font-size:.71rem;font-weight:700;color:var(–pk2);letter-spacing:.09em;margin-bottom:1rem;display:flex;align-items:center;gap:6px}
-.ct::before{content:’’;width:6px;height:6px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(–pk2),var(–pu))}
-
-/* grid */
+.ct{font-size:.71rem;font-weight:700;color:var(--pk2);letter-spacing:.09em;margin-bottom:1rem;display:flex;align-items:center;gap:6px}
+.ct::before{content:'';width:6px;height:6px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--pk2),var(--pu))}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
 @media(max-width:460px){.g2{grid-template-columns:1fr}}
-
-/* input */
-.ig label{display:block;font-size:.7rem;color:var(–txs);margin-bottom:4px;font-weight:500}
+/* inputs */
+.ig label{display:block;font-size:.7rem;color:var(--txs);margin-bottom:4px;font-weight:500}
 .ig input,.ig textarea{width:100%;border:1.5px solid rgba(255,183,197,.38);border-radius:11px;
-padding:.58rem .85rem;font-family:‘Zen Maru Gothic’,sans-serif;font-size:.88rem;
-color:var(–tx);background:var(–pk3);outline:none;transition:all .18s;resize:none}
-.ig input:focus,.ig textarea:focus{border-color:var(–pk2);background:#fff;box-shadow:0 0 0 3px rgba(244,136,154,.11)}
+  padding:.58rem .85rem;font-family:'Zen Maru Gothic',sans-serif;font-size:.88rem;
+  color:var(--tx);background:var(--pk3);outline:none;transition:all .18s;resize:none}
+.ig input:focus,.ig textarea:focus{border-color:var(--pk2);background:#fff;box-shadow:0 0 0 3px rgba(244,136,154,.11)}
 .ig textarea{min-height:120px;line-height:1.75}
-
-/* ── ハートカラーピッカー ── */
-.heart-section{display:flex;flex-direction:column;gap:.9rem}
-.heart-preview{
-display:flex;align-items:center;gap:.8rem;
-padding:.7rem 1rem;background:var(–pk3);border-radius:12px;
-border:1.5px solid rgba(255,183,197,.3);
-}
-.heart-icon{font-size:1.8rem;transition:all .25s;filter:drop-shadow(0 2px 4px rgba(0,0,0,.12))}
-.heart-preview-txt{font-size:.78rem;color:var(–txs);line-height:1.5}
-.heart-preview-txt strong{color:var(–tx);font-size:.88rem;display:block}
-
-/* カラースウォッチ */
-.swatch-label{font-size:.7rem;color:var(–txs);font-weight:600;margin-bottom:.45rem}
-.swatch-grid{display:flex;flex-wrap:wrap;gap:.45rem}
-.sw{
-width:36px;height:36px;border-radius:50%;cursor:pointer;border:2.5px solid transparent;
-transition:all .18s;display:flex;align-items:center;justify-content:center;
-font-size:1.1rem;position:relative;flex-shrink:0;
-}
-.sw:hover{transform:scale(1.12)}
-.sw.on{border-color:#fff;box-shadow:0 0 0 2.5px var(–heart),0 3px 10px rgba(0,0,0,.18);transform:scale(1.15)}
-.sw .sw-emoji{display:none;font-size:.75rem;position:absolute;bottom:-1px;right:-1px;line-height:1}
-.sw.on .sw-emoji{display:block}
-
-/* カスタムカラー */
-.custom-color-row{display:flex;align-items:center;gap:.6rem;margin-top:.2rem}
-.custom-color-row label{font-size:.7rem;color:var(–txs)}
-#customColorPick{width:36px;height:36px;border-radius:50%;border:2px solid rgba(255,183,197,.4);padding:2px;cursor:pointer;background:none}
+/* heart picker */
+.heart-preview{display:flex;align-items:center;gap:.8rem;padding:.7rem 1rem;background:var(--pk3);
+  border-radius:12px;border:1.5px solid rgba(255,183,197,.3);margin-bottom:.9rem}
+.heart-icon{font-size:1.8rem;transition:all .25s}
+.heart-preview-txt strong{color:var(--tx);font-size:.88rem;display:block}
+.heart-preview-txt span{font-size:.72rem;color:var(--txs)}
+.swatch-lbl{font-size:.7rem;color:var(--txs);font-weight:600;margin-bottom:.45rem}
+.swatch-grid{display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:.65rem}
+.sw{width:36px;height:36px;border-radius:50%;cursor:pointer;border:2.5px solid transparent;
+  transition:all .18s;position:relative;flex-shrink:0}
+.sw:hover{transform:scale(1.1)}
+.sw.on{border-color:#fff;box-shadow:0 0 0 2.5px var(--heart),0 3px 10px rgba(0,0,0,.18);transform:scale(1.15)}
+.sw.on::after{content:"✓";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:.65rem;color:#fff;font-weight:900;text-shadow:0 1px 3px rgba(0,0,0,.5)}
+.custom-row{display:flex;align-items:center;gap:.6rem}
+.custom-row label{font-size:.7rem;color:var(--txs)}
+#customColorPick{width:36px;height:36px;border-radius:50%;border:2px solid rgba(255,183,197,.4);
+  padding:2px;cursor:pointer;background:none}
 #customColorPick::-webkit-color-swatch{border-radius:50%;border:none}
 #customColorPick::-webkit-color-swatch-wrapper{padding:0;border-radius:50%}
-
-/* ── スライダー ── */
+/* sliders */
 .sliders{display:flex;flex-direction:column;gap:.9rem}
 .sl-row{display:flex;flex-direction:column;gap:4px}
 .sl-h{display:flex;justify-content:space-between;align-items:center}
-.sl-lbl{font-size:.71rem;font-weight:500;color:var(–txs)}
-.sl-val{font-size:.68rem;color:var(–pk2);font-weight:700;min-width:78px;text-align:right}
+.sl-lbl{font-size:.71rem;font-weight:500;color:var(--txs)}
+.sl-val{font-size:.68rem;color:var(--pk2);font-weight:700;min-width:78px;text-align:right}
 input[type=range]{-webkit-appearance:none;width:100%;height:4px;
-background:linear-gradient(90deg,var(–pk) var(–pct,50%),rgba(200,150,180,.2) var(–pct,50%));
-border-radius:99px;outline:none;cursor:pointer}
+  background:linear-gradient(90deg,var(--pk) var(--pct,50%),rgba(200,150,180,.2) var(--pct,50%));
+  border-radius:99px;outline:none;cursor:pointer}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;height:17px;border-radius:50%;
-background:linear-gradient(135deg,var(–pk2),var(–pu));box-shadow:0 2px 7px rgba(244,136,154,.35);transition:transform .13s}
+  background:linear-gradient(135deg,var(--pk2),var(--pu));box-shadow:0 2px 7px rgba(244,136,154,.35);transition:transform .13s}
 input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.22)}
-
-/* ── convert btn ── */
-.btn-cvt{width:100%;background:linear-gradient(135deg,var(–pk2) 0%,#e87fa0 48%,var(–pu) 100%);
-color:#fff;border:none;border-radius:13px;padding:.95rem;
-font-family:‘Zen Maru Gothic’,sans-serif;font-size:.97rem;font-weight:700;
-cursor:pointer;letter-spacing:.05em;box-shadow:0 5px 20px rgba(244,136,154,.34);
-position:relative;overflow:hidden;transition:all .2s;margin-top:.45rem}
-.btn-cvt::after{content:’’;position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.13),transparent);opacity:0;transition:opacity .18s}
+/* convert btn */
+.btn-cvt{width:100%;background:linear-gradient(135deg,var(--pk2) 0%,#e87fa0 48%,var(--pu) 100%);
+  color:#fff;border:none;border-radius:13px;padding:.95rem;
+  font-family:'Zen Maru Gothic',sans-serif;font-size:.97rem;font-weight:700;
+  cursor:pointer;letter-spacing:.05em;box-shadow:0 5px 20px rgba(244,136,154,.34);
+  position:relative;overflow:hidden;transition:all .2s;margin-top:.45rem}
+.btn-cvt::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.13),transparent);opacity:0;transition:opacity .18s}
 .btn-cvt:hover:not(:disabled)::after{opacity:1}
 .btn-cvt:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 26px rgba(244,136,154,.45)}
 .btn-cvt:active:not(:disabled){transform:none}
 .btn-cvt:disabled{opacity:.58;cursor:not-allowed;transform:none}
-
 /* loading */
 #loadW{display:none}
-.ld-in{display:flex;align-items:center;justify-content:center;gap:9px;padding:1.25rem;color:var(–txs);font-size:.8rem}
+.ld-in{display:flex;align-items:center;justify-content:center;gap:9px;padding:1.25rem;color:var(--txs);font-size:.8rem}
 .dots span{width:6px;height:6px;border-radius:50%;display:inline-block;animation:dB 1.2s ease-in-out infinite}
-.dots span:nth-child(1){background:var(–pk2)}.dots span:nth-child(2){background:#e087a0;animation-delay:.2s}.dots span:nth-child(3){background:var(–pu);animation-delay:.4s}
+.dots span:nth-child(1){background:var(--pk2)}.dots span:nth-child(2){background:#e087a0;animation-delay:.2s}.dots span:nth-child(3){background:var(--pu);animation-delay:.4s}
 @keyframes dB{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-7px)}}
-
 /* output */
 #outCard{display:none}#outCard.show{display:block}
 .stats-wrap{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.8rem}
-.sbadge{font-size:.66rem;font-weight:600;padding:2px 9px;border-radius:99px;background:var(–pk3);color:var(–txs);border:1px solid rgba(255,183,197,.35)}
-.out-txt{background:linear-gradient(135deg,var(–pk3),var(–pu2));border:1.5px solid rgba(255,183,197,.35);
-border-radius:13px;padding:1.15rem 1.25rem;font-size:.91rem;line-height:1.95;
-color:var(–tx);white-space:pre-wrap;word-break:break-word;
-font-family:‘Kosugi Maru’,sans-serif;min-height:65px}
+.sbadge{font-size:.66rem;font-weight:600;padding:2px 9px;border-radius:99px;background:var(--pk3);color:var(--txs);border:1px solid rgba(255,183,197,.35)}
+.out-txt{background:linear-gradient(135deg,var(--pk3),var(--pu2));border:1.5px solid rgba(255,183,197,.35);
+  border-radius:13px;padding:1.15rem 1.25rem;font-size:.91rem;line-height:1.95;
+  color:var(--tx);white-space:pre-wrap;word-break:break-word;
+  font-family:'Kosugi Maru',sans-serif;min-height:65px}
 .out-acts{display:flex;gap:.55rem;margin-top:.85rem;flex-wrap:wrap}
 .abt{flex:1;min-width:90px;border:1.5px solid rgba(255,183,197,.42);border-radius:10px;
-padding:.48rem .7rem;font-size:.73rem;font-weight:700;
-font-family:‘Zen Maru Gothic’,sans-serif;cursor:pointer;transition:all .16s;
-background:#fff;color:var(–pk2)}
-.abt:hover{background:var(–pk3);transform:translateY(-1px)}
-.abt.primary{background:linear-gradient(135deg,var(–pk2),var(–pu));border-color:transparent;color:#fff;box-shadow:0 3px 11px rgba(244,136,154,.26)}
+  padding:.48rem .7rem;font-size:.73rem;font-weight:700;
+  font-family:'Zen Maru Gothic',sans-serif;cursor:pointer;transition:all .16s;
+  background:#fff;color:var(--pk2)}
+.abt:hover{background:var(--pk3);transform:translateY(-1px)}
+.abt.primary{background:linear-gradient(135deg,var(--pk2),var(--pu));border-color:transparent;color:#fff;box-shadow:0 3px 11px rgba(244,136,154,.26)}
 .abt.primary:hover{box-shadow:0 5px 16px rgba(244,136,154,.4)}
 .abt.done{background:#a8d8a8!important;border-color:transparent!important;color:#fff!important}
-
 /* tweet */
 .tweet-btn{width:100%;margin-top:.55rem;background:linear-gradient(135deg,#1d9bf0,#1a8cd8);
-color:#fff;border:none;border-radius:10px;padding:.55rem;
-font-family:‘Zen Maru Gothic’,sans-serif;font-size:.8rem;font-weight:700;
-cursor:pointer;transition:all .18s;
-display:flex;align-items:center;justify-content:center;gap:6px;
-box-shadow:0 3px 12px rgba(29,155,240,.26)}
+  color:#fff;border:none;border-radius:10px;padding:.55rem;
+  font-family:'Zen Maru Gothic',sans-serif;font-size:.8rem;font-weight:700;
+  cursor:pointer;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:6px;
+  box-shadow:0 3px 12px rgba(29,155,240,.26)}
 .tweet-btn:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgba(29,155,240,.38)}
 .tweet-btn svg{width:14px;height:14px;fill:#fff;flex-shrink:0}
-
-/* ht */
 .ht-wrap{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.6rem;align-items:center}
 .ht-chip{background:rgba(29,155,240,.09);border:1px solid rgba(29,155,240,.28);color:#1d9bf0;
-font-size:.68rem;font-weight:600;padding:3px 9px;border-radius:99px;cursor:pointer;transition:all .13s;
-font-family:‘Zen Maru Gothic’,sans-serif}
-.ht-chip:hover{background:rgba(29,155,240,.16)}
-.ht-chip.off{background:rgba(150,150,150,.07);border-color:rgba(150,150,150,.18);color:var(–txs)}
-.ht-add{background:transparent;border:1.5px dashed rgba(255,183,197,.48);color:var(–pk2);
-font-size:.68rem;font-weight:600;padding:3px 9px;border-radius:99px;cursor:pointer;transition:all .13s;
-font-family:‘Zen Maru Gothic’,sans-serif}
-.ht-add:hover{background:var(–pk3)}
-
+  font-size:.68rem;font-weight:600;padding:3px 9px;border-radius:99px;cursor:pointer;
+  font-family:'Zen Maru Gothic',sans-serif;transition:all .13s}
+.ht-chip.off{background:rgba(150,150,150,.07);border-color:rgba(150,150,150,.18);color:var(--txs)}
+.ht-add{background:transparent;border:1.5px dashed rgba(255,183,197,.48);color:var(--pk2);
+  font-size:.68rem;font-weight:600;padding:3px 9px;border-radius:99px;cursor:pointer;
+  font-family:'Zen Maru Gothic',sans-serif}
+.ht-add:hover{background:var(--pk3)}
 /* err */
 .err{background:#fff0f0;border:1.5px solid #ffb3b3;color:#c0392b;border-radius:13px;
-padding:.85rem .95rem;font-size:.78rem;line-height:1.65;display:none;margin-bottom:.8rem}
+  padding:.85rem .95rem;font-size:.78rem;line-height:1.65;display:none;margin-bottom:.8rem}
 .err.show{display:block}
 /* toast */
 .toast{position:fixed;bottom:1.8rem;left:50%;transform:translateX(-50%) translateY(14px);
-background:rgba(61,37,53,.9);color:#fff;padding:.5rem 1.3rem;border-radius:99px;
-font-size:.76rem;opacity:0;transition:all .25s;pointer-events:none;z-index:300;
-backdrop-filter:blur(6px);white-space:nowrap}
+  background:rgba(61,37,53,.9);color:#fff;padding:.5rem 1.3rem;border-radius:99px;
+  font-size:.76rem;opacity:0;transition:all .25s;pointer-events:none;z-index:300;
+  backdrop-filter:blur(6px);white-space:nowrap}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-/* heart pop */
 .hp{position:fixed;pointer-events:none;z-index:400;animation:hA 1.1s ease forwards}
 @keyframes hA{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-75px) scale(1.45)}}
-.footer{text-align:center;margin-top:2.2rem;font-size:.68rem;color:var(–txs);opacity:.6;line-height:1.85}
+.footer{text-align:center;margin-top:2.2rem;font-size:.68rem;color:var(--txs);opacity:.6;line-height:1.85}
 </style>
-
 </head>
 <body>
 <div class="app">
@@ -186,7 +159,7 @@ backdrop-filter:blur(6px);white-space:nowrap}
   <p class="hd-sub">普通の感想をうざかわいいホビ垢構文に変換するよ ✨<br>強度とハートカラーをカスタムして投稿まで一気にできるよ 💭</p>
 </div>
 
-<!-- ① 設定 -->
+<!-- ① ユーザー設定 -->
 
 <div class="card">
   <div class="ct">ユーザー設定</div>
@@ -200,23 +173,19 @@ backdrop-filter:blur(6px);white-space:nowrap}
 
 <div class="card">
   <div class="ct">ハートカラー</div>
-  <div class="heart-section">
-    <div class="heart-preview">
-      <div class="heart-icon" id="heartPreview">🩷</div>
-      <div class="heart-preview-txt">
-        <strong id="heartColorName">ピンク（デフォルト）</strong>
-        メンバーカラーに合わせてカスタムできるよ
-      </div>
+  <div class="heart-preview">
+    <div class="heart-icon" id="heartPreview">🩷</div>
+    <div class="heart-preview-txt">
+      <strong id="heartColorName">ピンク（デフォルト）</strong>
+      <span>メンバーカラーに合わせてカスタムできるよ</span>
     </div>
-    <div>
-      <div class="swatch-label">カラーを選ぶ</div>
-      <div class="swatch-grid" id="swatchGrid"></div>
-    </div>
-    <div class="custom-color-row">
-      <label for="customColorPick">🎨 その他のカラー</label>
-      <input type="color" id="customColorPick" value="#ff6b9d" title="カスタムカラー">
-      <span style="font-size:.68rem;color:var(--txs)">← タップして自由に選んでね</span>
-    </div>
+  </div>
+  <div class="swatch-lbl">カラーを選ぶ</div>
+  <div class="swatch-grid" id="swatchGrid"></div>
+  <div class="custom-row">
+    <label for="customColorPick">🎨 その他のカラー</label>
+    <input type="color" id="customColorPick" value="#ff6b9d">
+    <span style="font-size:.67rem;color:var(--txs)">タップして自由に選んでね</span>
   </div>
 </div>
 
@@ -250,7 +219,12 @@ backdrop-filter:blur(6px);white-space:nowrap}
   <button class="btn-cvt" id="cvtBtn" onclick="onCvt(event)">✨ ホビ垢構文に変換する</button>
 </div>
 
-<div id="loadW"><div class="card"><div class="ld-in"><div class="dots"><span></span><span></span><span></span></div><span>変換中だよ、ちょっとまってね🎀</span></div></div></div>
+<!-- loading -->
+
+<div id="loadW"><div class="card"><div class="ld-in">
+  <div class="dots"><span></span><span></span><span></span></div>
+  <span>変換中だよ、ちょっとまってね🎀</span>
+</div></div></div>
 <div class="err" id="errMsg"></div>
 
 <!-- ⑤ 出力 -->
@@ -276,107 +250,60 @@ backdrop-filter:blur(6px);white-space:nowrap}
 
 <script>
 // ══════════════════════════════════════
-//  HEART COLOR DATA
+//  UI STATE（data.js / converter.js の定数を使う）
 // ══════════════════════════════════════
-const HEART_COLORS = [
-  {name:"ピンク",    color:"#ff6b9d", emoji:"🩷", heart:"🩷"},
-  {name:"レッド",    color:"#e74c3c", emoji:"❤️",  heart:"❤️"},
-  {name:"オレンジ",  color:"#f39c12", emoji:"🧡", heart:"🧡"},
-  {name:"イエロー",  color:"#f1c40f", emoji:"💛", heart:"💛"},
-  {name:"グリーン",  color:"#2ecc71", emoji:"💚", heart:"💚"},
-  {name:"ライトブルー",color:"#5bc8f5",emoji:"🩵",heart:"🩵"},
-  {name:"ブルー",    color:"#3498db", emoji:"💙", heart:"💙"},
-  {name:"パープル",  color:"#9b59b6", emoji:"💜", heart:"💜"},
-  {name:"ホワイト",  color:"#c8b4b8", emoji:"🤍", heart:"🤍"},
-  {name:"ブラック",  color:"#2c2c2c", emoji:"🖤", heart:"🖤"},
-  {name:"ブラウン",  color:"#795548", emoji:"🤎", heart:"🤎"},
-  {name:"グレー",    color:"#9a9a9a", emoji:"🩶", heart:"🩶"},
-];
+let converter    = new HobiConverter({ vocab: VOCAB, emojiPairs: EMOJI_PAIRS, kaomoji: KAOMOJI });
+let activeHtIdx  = 0;
+let customHex    = null;
+let lastResult   = "";
+let htActive     = new Set(DEFAULT_HASHTAGS);
+let customHts    = [];
 
-// 顔文字セット
-const KAOMOJI = [
-  "ദ്ദിᐢ- ̫-ᐢ₎","˘ ᴗ  ̫ ᴗ ˘","ᐡ• ·̫ •̥ᐡ","( ᴖ ̫ᴖ )",
-  "ᐡ⸝⸝⊃ ·̭ •̥ ⸝⸝ᐡ","ᵕ ̥_ .̫ _ ̥ᵕ","꒰ – ·̫ – ꒱ﾉ",
-  "(ᐡ｡› ·̫ ‹｡ᐡ )੭","(ᐡㅠ ‧̫ ㅠᐡ)","ᐡ⸝⸝> ·̫ <⸝⸝ᐡ"
-];
-
-// 絵文字ペア
-const EMOJI_PAIRS = [
-  "👼🏻💞","🆗💘","👶🏻🎀","😽💞","🪄✨","🐻‍❄️🩵",
-  "✊🏻🌟","😭👈🏻","🆙💖","🥲🩶","🐑💤","🍒💬",
-  "💯✨","🎀🩶","💭🎀","😻❤️‍🔥","🤩💖","🥂🫧",
-  "😿🌀","🤝🏻🌟","🍼🩵","💮✨","😭⤴️"
-];
-
-// 語録
-const VOCAB = {
-  greeting: ["ずっしょ","にっこり","出席確認","答え合わせ","浮かれぽんち","モチベなくて","今日行くか迷ったんだけど","ふたりぼっちの世界","しんだ","満身創痍"],
-  praise: ["にゃーーいすき","できる男","しごでき","あまあま","ゲロ甘","いとちー","とくベチュ","はなまる","だいてんさいさん","ときめきこんてんChu","大满足","だいすきだいすき"],
-  thanks: ["見つけてくれて","覚えてくれて","一生忘れられない","いちばん大切にしてくれて","過去一時間使ってくれて","初めて見る顔してくれて","大満足させてくれる","好きでいさせてくれてありがとう","しあわせ空間","いっぱいありがとう","これからもずーっと","たくさん考えてくれて","抱えきれないしあわせ","予想以上のことしてくれて","指名してくれた","戻ってきてくれて"],
-  bodyReaction: ["心臓くるしー","心臓とくんとする","にんまり","顔ない","帰り道","抱えきれなくて幸せ歩いた","転げ落ちるくらいドカ笑いさせてくれて","記憶喪失","すきすぎスキップ帰宅"],
-  special: ["ひみつ","ずるい","特別","奇跡","リベンジ","ここでいけると思ってなくてびっくりした","天井だったのに見つけてくれた","行動で示してくれた","特等席","答え合わせ"],
-  negative: ["納得いく反応じゃなかったけど","困らせちゃってごめんね","わがままに付き合わせちゃってごめんね"],
-  oshiDynamic: ["{O}も100点だった","{O}がしてくれること全部たからもの","{O}だいすき増した","{O}の特等席！","{O}しか{S}のこと管理できない","{O}が{S}のこと見る時の顔がいちばん好き","{S}を喜ばせる天才","{S}のこと全部わかってる","{S}@しあわせもの","頼んでないのに自分からやってくるのずるい","骨埋めた","墓立てた","{O}しかいないんだ","{O}もせかいいちしあわせでいてほしい","{S}のこと幸せにしてくれるひと"],
-};
-
-const DEFAULT_HASHTAGS = ["#ホビ垢構文ジェネレーター","#ホビ垢","#推し活"];
-
-// ══════════════════════════════════════
-//  STATE
-// ══════════════════════════════════════
-let activeHeartIdx = 0;
-let customHex      = null;   // カスタムカラー選択時
-let lastResult     = "";
-let htActive       = new Set(DEFAULT_HASHTAGS);
-let customHts      = [];
-
-// ══════════════════════════════════════
-//  UTILS
-// ══════════════════════════════════════
 const $ = id => document.getElementById(id);
-const pick  = arr => arr[Math.floor(Math.random() * arr.length)];
-const pickN = (arr,n) => [...arr].sort(()=>Math.random()-.5).slice(0,Math.min(n,arr.length));
-const fillN = (t,o,s) => t.replace(/\{O\}/g,o).replace(/\{S\}/g,s);
 
-function showToast(msg,dur=2200){
-  const t=$("toast");t.textContent=msg;t.classList.add("show");
-  setTimeout(()=>t.classList.remove("show"),dur);
+// ══════════════════════════════════════
+//  TOAST / HEART POP
+// ══════════════════════════════════════
+function showToast(msg, dur=2200){
+  const t=$("toast"); t.textContent=msg; t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"), dur);
 }
-function heartPop(x,y,emoji){
+function heartPop(x, y, emoji){
   for(let i=0;i<6;i++) setTimeout(()=>{
-    const el=document.createElement("div");el.className="hp";
+    const el=document.createElement("div"); el.className="hp";
     el.textContent=emoji||"🤍";
-    el.style.cssText="font-size:"+(1+Math.random()*.6)+"rem;left:"+(x+(Math.random()-.5)*70)+"px;top:"+(y+(Math.random()-.5)*50)+"px";
-    document.body.appendChild(el);setTimeout(()=>el.remove(),1200);
-  },i*60);
+    el.style.cssText=`font-size:${1+Math.random()*.6}rem;left:${x+(Math.random()-.5)*70}px;top:${y+(Math.random()-.5)*50}px`;
+    document.body.appendChild(el); setTimeout(()=>el.remove(),1200);
+  }, i*60);
 }
+
+// ── 浮遊デコ ─────────────────────────
 const DECOS=["🎀","🤍","⭐","🌸","💭","✨","🏆","🌷"];
 function spawnDeco(){
-  const el=document.createElement("div");el.className="deco";
+  const el=document.createElement("div"); el.className="deco";
   el.textContent=DECOS[Math.floor(Math.random()*DECOS.length)];
   el.style.left=(Math.random()*100)+"vw";
   el.style.fontSize=(1+Math.random()*1.3)+"rem";
   const d=12+Math.random()*9;
-  el.style.animationDuration=d+"s";el.style.animationDelay=(Math.random()*3)+"s";
-  document.body.appendChild(el);setTimeout(()=>el.remove(),(d+5)*1000);
+  el.style.animationDuration=d+"s"; el.style.animationDelay=(Math.random()*3)+"s";
+  document.body.appendChild(el); setTimeout(()=>el.remove(),(d+5)*1000);
 }
-for(let i=0;i<8;i++)setTimeout(spawnDeco,i*1700);setInterval(spawnDeco,3500);
+for(let i=0;i<8;i++) setTimeout(spawnDeco,i*1700);
+setInterval(spawnDeco,3500);
 
 // ══════════════════════════════════════
-//  HEART COLOR UI
+//  HEART COLOR UI  （data.js の HEART_COLORS を使う）
 // ══════════════════════════════════════
 function getActiveHeart(){
-  if(customHex) return {name:"カスタム",color:customHex,heart:"🤍",emoji:"🎨"};
-  return HEART_COLORS[activeHeartIdx];
+  if(customHex) return { name:"カスタム", color:customHex, heart:"🤍" };
+  return HEART_COLORS[activeHtIdx];
 }
-
 function updateHeartPreview(){
   const h=getActiveHeart();
   $("heartPreview").textContent=h.heart;
   $("heartColorName").textContent=h.name;
-  document.documentElement.style.setProperty("--heart",h.color);
+  document.documentElement.style.setProperty("--heart", h.color);
 }
-
 function initSwatches(){
   const g=$("swatchGrid");
   HEART_COLORS.forEach((h,i)=>{
@@ -384,18 +311,16 @@ function initSwatches(){
     sw.className="sw"+(i===0?" on":"");
     sw.style.background=h.color;
     sw.title=h.name;
-    sw.innerHTML=`<span class="sw-emoji">✓</span>`;
     sw.onclick=()=>{
       customHex=null;
-      activeHeartIdx=i;
+      activeHtIdx=i;
       document.querySelectorAll(".sw").forEach(s=>s.classList.remove("on"));
       sw.classList.add("on");
       updateHeartPreview();
     };
     g.appendChild(sw);
   });
-  // カスタムカラーピッカー連携
-  $("customColorPick").addEventListener("input",e=>{
+  $("customColorPick").addEventListener("input", e=>{
     customHex=e.target.value;
     document.querySelectorAll(".sw").forEach(s=>s.classList.remove("on"));
     updateHeartPreview();
@@ -405,196 +330,114 @@ function initSwatches(){
 // ══════════════════════════════════════
 //  SLIDERS
 // ══════════════════════════════════════
-function updSl(el,lid,labels){
+function updSl(el, lid, labels){
   const v=+el.value;
   $(lid).textContent=labels[v<=33?0:v<=66?1:2];
-  el.style.setProperty("--pct",v+"%");
+  el.style.setProperty("--pct", v+"%");
 }
 function initSliders(){
   ["intensity","emojiLevel","lineBreak"].forEach(id=>{
-    const el=$(id);el.style.setProperty("--pct",el.value+"%");
+    const el=$(id); el.style.setProperty("--pct",el.value+"%");
   });
 }
 
 // ══════════════════════════════════════
-//  HASHTAGS
+//  HASHTAGS  （data.js の DEFAULT_HASHTAGS を使う）
 // ══════════════════════════════════════
 function renderHtWrap(){
-  const w=$("htWrap");w.innerHTML="";
+  const w=$("htWrap"); w.innerHTML="";
   [...DEFAULT_HASHTAGS,...customHts].forEach(ht=>{
     const c=document.createElement("button");
     c.className="ht-chip"+(htActive.has(ht)?"":" off");
     c.textContent=ht;
-    c.onclick=()=>{htActive.has(ht)?htActive.delete(ht):htActive.add(ht);renderHtWrap()};
+    c.onclick=()=>{ htActive.has(ht)?htActive.delete(ht):htActive.add(ht); renderHtWrap(); };
     w.appendChild(c);
   });
   const add=document.createElement("button");
-  add.className="ht-add";add.textContent="+ タグ追加";
+  add.className="ht-add"; add.textContent="+ タグ追加";
   add.onclick=()=>{
     const tag=prompt("追加するハッシュタグを入力（#は自動でつくよ）");
-    if(!tag)return;
+    if(!tag) return;
     const clean=tag.startsWith("#")?tag.trim():"#"+tag.trim();
-    if(!customHts.includes(clean)){customHts.push(clean);htActive.add(clean);}
+    if(!customHts.includes(clean)){ customHts.push(clean); htActive.add(clean); }
     renderHtWrap();
   };
   w.appendChild(add);
 }
 
 // ══════════════════════════════════════
-//  PROMPT
+//  CONVERT  （converter.js の HobiConverter を使う）
 // ══════════════════════════════════════
-function buildPrompt(inputText,selfName,oshiName){
-  const h=getActiveHeart();
-  const iv=+$("intensity").value,ev=+$("emojiLevel").value,lv=+$("lineBreak").value;
-
-  // 絵文字・顔文字をランダムにピックしてプロンプトへ
-  const emojiSample = pickN(EMOJI_PAIRS,8).join(" ");
-  const kaoSample   = pickN(KAOMOJI,4).join("  ");
-
-  const heartEmoji  = h.heart;
-  const heartNote   = `ハートの絵文字は「${heartEmoji}」を使う（メンバーカラー反映）`;
-
-  const iRule = iv<=33?"感情表現はやや控えめ・読みやすさ重視":iv<=66?"ホビ垢らしい感情表現・語録を適切に盛り込む":"感情全開・語録最大活用・誇張表現多め・重ため";
-  const eRule = ev<=33?"絵文字は文末に1〜2個":ev<=66?"絵文字は4〜6個":"絵文字は8個以上・ほぼ毎フレーズにつける";
-  const lRule = lv<=33?"改行少なめ・1〜2文まとめる":lv<=66?"3〜4フレーズごとに改行":"1フレーズごとに改行・ホビ垢特有の細かいテンポ";
-
-  const greet = pickN(VOCAB.greeting,3).join("、");
-  const pr    = pickN(VOCAB.praise,4).join("、");
-  const th    = pickN(VOCAB.thanks,4).join("、");
-  const br    = pickN(VOCAB.bodyReaction,3).join("、");
-  const sp    = pickN(VOCAB.special,3).join("、");
-  const od    = pickN(VOCAB.oshiDynamic,5).map(t=>fillN(t,oshiName,selfName)).join("、");
-
-  const txt=inputText;
-  const hints=[
-    /ライブ|現場|コンサート|公演|舞台|イベ|チェキ|握手|対面/.test(txt)&&"現場・イベント系",
-    /目が合|見てくれ|見つけ|視線|指名/.test(txt)&&"目が合う・認識エピソード",
-    /嬉し|幸せ|楽し|最高|よかっ|好き|かわい/.test(txt)&&"ポジティブ感情",
-    /悲し|泣|辛|切な|苦し/.test(txt)&&"ネガティブ感情",
-    /笑|ニコ|にこ/.test(txt)&&"笑顔エピソード",
-    /覚え|名前/.test(txt)&&"覚えてもらったエピソード",
-  ].filter(Boolean).join("、")||"特になし";
-
-  return `あなたは「ホビ垢（趣味アカウント）」を運用しているオタクになりきり、感想をホビ垢構文に変換します。
-
-## 設定
-- 自分の名前: ${selfName}
-- 推しの名前: ${oshiName}
-
-## ホビ垢構文の本質
-・感想ではなく「${selfName}と${oshiName}の関係性の物語」として語る
-・出来事を奇跡・特別なこととしてロマン化する
-・演者の行動を「${selfName}のためにしてくれた」として解釈する
-・「見つけてもらった」「覚えてもらった」体験を特別なイベントとして描写する
-・感情は誇張気味に（しんだ・記憶喪失・心臓くるしー・満身創痍など）
-・文法より気持ち優先・文が途中で途切れてもOK
-・ひらがな多用（だいすき・しあわせ・ありがとう・すきすぎ等）
-・「自分」と「演者」の関係が中心・評価より物語
-
-## 絵文字・顔文字ルール
-・${heartNote}
-・${eRule}
-・以下の絵文字ペアから文脈に合うものを選んで使う: ${emojiSample}
-・以下の顔文字を文中に1〜2個自然に挿入する: ${kaoSample}
-
-## 強度・形式ルール
-・強度: ${iRule}
-・${lRule}
-・毎回わずかに異なる表現にする（ゆらぎ必須）
-
-## 語録候補（文脈に合うものだけ使う）
-挨拶: ${greet}
-褒め: ${pr}
-感謝: ${th}
-身体反応: ${br}
-特別感: ${sp}
-推し×自分: ${od}
-
-## 入力文脈: ${hints}
-
-## 出力ルール
-・変換後の文章のみ（説明・前置き・注釈なし）
-・X投稿として自然に読める
-
-## 変換する感想
-${inputText}`;
-}
-
-// ══════════════════════════════════════
-//  CONVERT
-// ══════════════════════════════════════
-async function onCvt(e,retry=false){
-  if(e) heartPop(e.clientX,e.clientY+window.scrollY,getActiveHeart().heart);
+async function onCvt(e, retry=false){
+  if(e) heartPop(e.clientX, e.clientY+window.scrollY, getActiveHeart().heart);
   const inputText=$("inputText").value.trim();
-  const selfName=$("selfName").value.trim()||"私";
-  const oshiName=$("oshiName").value.trim()||"推し";
-  if(!inputText){showToast("感想を入力してね💭");$("inputText").focus();return;}
-  const btn=$("cvtBtn");btn.disabled=true;
+  const selfName =$("selfName").value.trim()||"私";
+  const oshiName =$("oshiName").value.trim()||"推し";
+  if(!inputText){ showToast("感想を入力してね💭"); $("inputText").focus(); return; }
+
+  const btn=$("cvtBtn"); btn.disabled=true;
   $("loadW").style.display="block";
   $("outCard").classList.remove("show");
   $("errMsg").classList.remove("show");
+
   try{
-    const res=await fetch("https://api.anthropic.com/v1/messages",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({
-        model:"claude-sonnet-4-20250514",max_tokens:1000,
-        messages:[{role:"user",content:buildPrompt(inputText,selfName,oshiName)}]
-      }),
+    const result = await converter.convert({
+      inputText,
+      selfName,
+      oshiName,
+      heartEmoji:     getActiveHeart().heart,
+      intensity:      +$("intensity").value,
+      emojiLevel:     +$("emojiLevel").value,
+      lineBreakLevel: +$("lineBreak").value,
     });
-    if(!res.ok){const er=await res.json().catch(()=>({}));throw new Error(er.error?.message||"API Error "+res.status);}
-    const data=await res.json();
-    lastResult=data.content.map(b=>b.text||"").join("").trim();
-    renderOutput(lastResult);
+    lastResult = result;
+    $("outTxt").textContent = result;
+
+    // 統計バッジ（converter.js の stats() を使う）
+    const st = converter.stats(result);
+    $("statsWrap").innerHTML=
+      `<span class="sbadge">${st.chars}字</span>`+
+      `<span class="sbadge">${st.lines}行</span>`+
+      `<span class="sbadge">${st.emojis}絵文字</span>`;
+
     $("outCard").classList.add("show");
     const rect=$("outCard").getBoundingClientRect();
-    heartPop(rect.left+rect.width/2,rect.top+window.scrollY+50,getActiveHeart().heart);
+    heartPop(rect.left+rect.width/2, rect.top+window.scrollY+50, getActiveHeart().heart);
     showToast(retry?"再変換したよ🔁":"変換できたよ🎀 投稿してね！");
     setTimeout(()=>$("outCard").scrollIntoView({behavior:"smooth",block:"nearest"}),100);
-  }catch(err){
-    const el=$("errMsg");el.textContent="エラーが出ちゃった…💦 もう一度試してね。("+err.message+")";el.classList.add("show");
-  }finally{
-    $("loadW").style.display="none";btn.disabled=false;
+
+  } catch(err){
+    const el=$("errMsg");
+    el.textContent="エラーが出ちゃった…💦 もう一度試してね。("+err.message+")";
+    el.classList.add("show");
+  } finally{
+    $("loadW").style.display="none"; btn.disabled=false;
   }
 }
 
-// ══════════════════════════════════════
-//  OUTPUT
-// ══════════════════════════════════════
-function renderOutput(text){
-  const chars=text.length;
-  const lines=(text.match(/\n/g)||[]).length+1;
-  const emojis=(text.match(/[\u{1F300}-\u{1FFFF}\u{2600}-\u{27BF}]|⸝⸝⸝/gu)||[]).length;
-  $("statsWrap").innerHTML=
-    `<span class="sbadge">${chars}字</span>`+
-    `<span class="sbadge">${lines}行</span>`+
-    `<span class="sbadge">${emojis}絵文字</span>`;
-  $("outTxt").textContent=text;
-}
-
 async function doCopy(){
-  if(!lastResult){showToast("先に変換してね💭");return;}
+  if(!lastResult){ showToast("先に変換してね💭"); return; }
   try{
     await navigator.clipboard.writeText(lastResult);
-    const b=$("copyBtn");b.textContent="✓ コピー完了";b.classList.add("done");
+    const b=$("copyBtn"); b.textContent="✓ コピー完了"; b.classList.add("done");
     showToast("コピーしたよ🎀");
-    setTimeout(()=>{b.textContent="📋 コピー";b.classList.remove("done")},2000);
-  }catch{showToast("コピーに失敗しちゃった…");}
+    setTimeout(()=>{ b.textContent="📋 コピー"; b.classList.remove("done"); },2000);
+  } catch{ showToast("コピーに失敗しちゃった…"); }
 }
 
 function doTweet(){
-  if(!lastResult){showToast("先に変換してね💭");return;}
+  if(!lastResult){ showToast("先に変換してね💭"); return; }
   const ht=[...htActive].join(" ");
   const full=lastResult+(ht?"\n\n"+ht:"");
   window.open("https://twitter.com/intent/tweet?text="+encodeURIComponent(full),"_blank","noopener");
   showToast("Xの投稿画面を開いたよ🐦",2500);
 }
 
-document.addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key==="Enter")onCvt(null)});
+document.addEventListener("keydown", e=>{
+  if((e.ctrlKey||e.metaKey)&&e.key==="Enter") onCvt(null);
+});
 
-// ══════════════════════════════════════
-//  BOOT
-// ══════════════════════════════════════
+// ── BOOT ──────────────────────────────
 initSwatches();
 initSliders();
 renderHtWrap();
