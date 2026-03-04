@@ -29,7 +29,7 @@ isRemembered: /覚え|名前/.test(text),
 }
 
 // ── プロンプト構築 ───────────────────────────────
-buildPrompt({ inputText, selfName, oshiName, heartEmoji, intensity, emojiLevel, lineBreakLevel }) {
+buildPrompt({ inputText, selfName, oshiName, heartEmojis, intensity, emojiLevel, lineBreakLevel }) {
 const iRule = intensity <= 33
 ? “感情表現はやや控えめ・読みやすさ重視”
 : intensity <= 66
@@ -89,7 +89,7 @@ return `あなたは「ホビ垢（趣味アカウント）」を運用してい
 
 ## 絵文字・顔文字ルール
 
-・ハートの絵文字は「${heartEmoji}」を使う（メンバーカラー）
+・ハートの絵文字は ${heartEmojis.length === 1 ? `「${heartEmojis[0]}」を使う` : `「${heartEmojis.join("」「")}」をバランスよく混ぜて使う`}（メンバーカラー）
 ・${eRule}
 ・使用する絵文字ペア候補: ${emojiSample}
 ・顔文字を文中に1〜2個自然に挿入: ${kaoSample}
