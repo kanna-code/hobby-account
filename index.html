@@ -5,621 +5,600 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ホビ垢構文変換ちゃん🎀</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Kosugi+Maru&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --pink: #ffb7c5;
-    --pink-light: #ffe4ec;
-    --pink-deep: #f4889a;
-    --cream: #fff9fb;
-    --purple: #d4b8e0;
-    --purple-light: #f0e6f8;
-    --text: #5a3a4a;
-    --text-light: #9a7a8a;
-    --white: #ffffff;
-    --shadow: rgba(244, 136, 154, 0.18);
-  }
-
-- { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-font-family: ‘Zen Maru Gothic’, sans-serif;
-background: var(–cream);
-min-height: 100vh;
-color: var(–text);
-overflow-x: hidden;
-position: relative;
+:root{
+  --pk:#ffb7c5;--pk2:#f4889a;--pk3:#fff0f5;
+  --pu:#c9a8e0;--pu2:#f2eafc;
+  --cream:#fffbfd;--tx:#3d2535;--txs:#9a7a8a;
+  --wh:#ffffff;--sh:rgba(244,136,154,.13);--rb:20px;
+  --heart:#ff6b9d;
 }
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Zen Maru Gothic',sans-serif;background:var(--cream);color:var(--tx);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse 70% 55% at 10% 10%,rgba(255,183,197,.18) 0%,transparent 55%),
+             radial-gradient(ellipse 55% 65% at 92% 88%,rgba(201,168,224,.14) 0%,transparent 55%)}
+.deco{position:fixed;pointer-events:none;z-index:0;animation:fUp linear infinite;opacity:.08}
+@keyframes fUp{0%{transform:translateY(108vh) rotate(0deg);opacity:0}8%{opacity:.08}92%{opacity:.08}100%{transform:translateY(-18vh) rotate(540deg);opacity:0}}
 
-/* 背景装飾 */
-body::before {
-content: ‘’;
-position: fixed;
-inset: 0;
-background:
-radial-gradient(circle at 10% 20%, rgba(255,183,197,0.25) 0%, transparent 40%),
-radial-gradient(circle at 90% 80%, rgba(212,184,224,0.2) 0%, transparent 40%),
-radial-gradient(circle at 50% 50%, rgba(255,228,236,0.3) 0%, transparent 60%);
-pointer-events: none;
-z-index: 0;
+.app{position:relative;z-index:1;max-width:680px;margin:0 auto;padding:2rem 1.1rem 6rem}
+
+/* header */
+.hd{text-align:center;margin-bottom:2rem;animation:fD .7s ease both}
+@keyframes fD{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:none}}
+.hd-badge{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(128deg,var(–pk2),var(–pu));color:#fff;font-size:.65rem;font-weight:700;padding:4px 15px;border-radius:99px;letter-spacing:.12em;margin-bottom:.8rem}
+.hd h1{font-size:clamp(1.4rem,5vw,2rem);font-weight:700;line-height:1.3;margin-bottom:.4rem}
+.hd h1 em{font-style:normal;background:linear-gradient(128deg,var(–pk2),var(–pu));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hd-sub{font-size:.78rem;color:var(–txs);line-height:1.85}
+
+/* card */
+.card{background:var(–wh);border-radius:var(–rb);padding:1.4rem 1.5rem;margin-bottom:.9rem;
+box-shadow:0 3px 22px var(–sh),0 1px 3px rgba(0,0,0,.03);
+border:1.5px solid rgba(255,183,197,.2);animation:fU .5s ease both}
+@keyframes fU{from{opacity:0;transform:translateY(11px)}to{opacity:1;transform:none}}
+.card:nth-child(2){animation-delay:.06s}.card:nth-child(3){animation-delay:.11s}
+.card:nth-child(4){animation-delay:.16s}.card:nth-child(5){animation-delay:.21s}
+
+.ct{font-size:.71rem;font-weight:700;color:var(–pk2);letter-spacing:.09em;margin-bottom:1rem;display:flex;align-items:center;gap:6px}
+.ct::before{content:’’;width:6px;height:6px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(–pk2),var(–pu))}
+
+/* grid */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+@media(max-width:460px){.g2{grid-template-columns:1fr}}
+
+/* input */
+.ig label{display:block;font-size:.7rem;color:var(–txs);margin-bottom:4px;font-weight:500}
+.ig input,.ig textarea{width:100%;border:1.5px solid rgba(255,183,197,.38);border-radius:11px;
+padding:.58rem .85rem;font-family:‘Zen Maru Gothic’,sans-serif;font-size:.88rem;
+color:var(–tx);background:var(–pk3);outline:none;transition:all .18s;resize:none}
+.ig input:focus,.ig textarea:focus{border-color:var(–pk2);background:#fff;box-shadow:0 0 0 3px rgba(244,136,154,.11)}
+.ig textarea{min-height:120px;line-height:1.75}
+
+/* ── ハートカラーピッカー ── */
+.heart-section{display:flex;flex-direction:column;gap:.9rem}
+.heart-preview{
+display:flex;align-items:center;gap:.8rem;
+padding:.7rem 1rem;background:var(–pk3);border-radius:12px;
+border:1.5px solid rgba(255,183,197,.3);
 }
+.heart-icon{font-size:1.8rem;transition:all .25s;filter:drop-shadow(0 2px 4px rgba(0,0,0,.12))}
+.heart-preview-txt{font-size:.78rem;color:var(–txs);line-height:1.5}
+.heart-preview-txt strong{color:var(–tx);font-size:.88rem;display:block}
 
-.floating-deco {
-position: fixed;
-pointer-events: none;
-z-index: 0;
-font-size: 1.5rem;
-opacity: 0.12;
-animation: floatDeco linear infinite;
+/* カラースウォッチ */
+.swatch-label{font-size:.7rem;color:var(–txs);font-weight:600;margin-bottom:.45rem}
+.swatch-grid{display:flex;flex-wrap:wrap;gap:.45rem}
+.sw{
+width:36px;height:36px;border-radius:50%;cursor:pointer;border:2.5px solid transparent;
+transition:all .18s;display:flex;align-items:center;justify-content:center;
+font-size:1.1rem;position:relative;flex-shrink:0;
 }
+.sw:hover{transform:scale(1.12)}
+.sw.on{border-color:#fff;box-shadow:0 0 0 2.5px var(–heart),0 3px 10px rgba(0,0,0,.18);transform:scale(1.15)}
+.sw .sw-emoji{display:none;font-size:.75rem;position:absolute;bottom:-1px;right:-1px;line-height:1}
+.sw.on .sw-emoji{display:block}
 
-@keyframes floatDeco {
-0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
-10% { opacity: 0.12; }
-90% { opacity: 0.12; }
-100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
-}
+/* カスタムカラー */
+.custom-color-row{display:flex;align-items:center;gap:.6rem;margin-top:.2rem}
+.custom-color-row label{font-size:.7rem;color:var(–txs)}
+#customColorPick{width:36px;height:36px;border-radius:50%;border:2px solid rgba(255,183,197,.4);padding:2px;cursor:pointer;background:none}
+#customColorPick::-webkit-color-swatch{border-radius:50%;border:none}
+#customColorPick::-webkit-color-swatch-wrapper{padding:0;border-radius:50%}
 
-.wrapper {
-position: relative;
-z-index: 1;
-max-width: 680px;
-margin: 0 auto;
-padding: 2rem 1.2rem 4rem;
-}
+/* ── スライダー ── */
+.sliders{display:flex;flex-direction:column;gap:.9rem}
+.sl-row{display:flex;flex-direction:column;gap:4px}
+.sl-h{display:flex;justify-content:space-between;align-items:center}
+.sl-lbl{font-size:.71rem;font-weight:500;color:var(–txs)}
+.sl-val{font-size:.68rem;color:var(–pk2);font-weight:700;min-width:78px;text-align:right}
+input[type=range]{-webkit-appearance:none;width:100%;height:4px;
+background:linear-gradient(90deg,var(–pk) var(–pct,50%),rgba(200,150,180,.2) var(–pct,50%));
+border-radius:99px;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;height:17px;border-radius:50%;
+background:linear-gradient(135deg,var(–pk2),var(–pu));box-shadow:0 2px 7px rgba(244,136,154,.35);transition:transform .13s}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.22)}
 
-/* ヘッダー */
-.header {
-text-align: center;
-margin-bottom: 2rem;
-animation: fadeDown 0.8s ease both;
-}
+/* ── convert btn ── */
+.btn-cvt{width:100%;background:linear-gradient(135deg,var(–pk2) 0%,#e87fa0 48%,var(–pu) 100%);
+color:#fff;border:none;border-radius:13px;padding:.95rem;
+font-family:‘Zen Maru Gothic’,sans-serif;font-size:.97rem;font-weight:700;
+cursor:pointer;letter-spacing:.05em;box-shadow:0 5px 20px rgba(244,136,154,.34);
+position:relative;overflow:hidden;transition:all .2s;margin-top:.45rem}
+.btn-cvt::after{content:’’;position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.13),transparent);opacity:0;transition:opacity .18s}
+.btn-cvt:hover:not(:disabled)::after{opacity:1}
+.btn-cvt:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 26px rgba(244,136,154,.45)}
+.btn-cvt:active:not(:disabled){transform:none}
+.btn-cvt:disabled{opacity:.58;cursor:not-allowed;transform:none}
 
-@keyframes fadeDown {
-from { opacity: 0; transform: translateY(-20px); }
-to { opacity: 1; transform: translateY(0); }
-}
+/* loading */
+#loadW{display:none}
+.ld-in{display:flex;align-items:center;justify-content:center;gap:9px;padding:1.25rem;color:var(–txs);font-size:.8rem}
+.dots span{width:6px;height:6px;border-radius:50%;display:inline-block;animation:dB 1.2s ease-in-out infinite}
+.dots span:nth-child(1){background:var(–pk2)}.dots span:nth-child(2){background:#e087a0;animation-delay:.2s}.dots span:nth-child(3){background:var(–pu);animation-delay:.4s}
+@keyframes dB{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-7px)}}
 
-.header-badge {
-display: inline-block;
-background: linear-gradient(135deg, var(–pink), var(–purple));
-color: white;
-font-size: 0.7rem;
-padding: 3px 12px;
-border-radius: 99px;
-letter-spacing: 0.1em;
-margin-bottom: 0.8rem;
-font-weight: 700;
-}
+/* output */
+#outCard{display:none}#outCard.show{display:block}
+.stats-wrap{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.8rem}
+.sbadge{font-size:.66rem;font-weight:600;padding:2px 9px;border-radius:99px;background:var(–pk3);color:var(–txs);border:1px solid rgba(255,183,197,.35)}
+.out-txt{background:linear-gradient(135deg,var(–pk3),var(–pu2));border:1.5px solid rgba(255,183,197,.35);
+border-radius:13px;padding:1.15rem 1.25rem;font-size:.91rem;line-height:1.95;
+color:var(–tx);white-space:pre-wrap;word-break:break-word;
+font-family:‘Kosugi Maru’,sans-serif;min-height:65px}
+.out-acts{display:flex;gap:.55rem;margin-top:.85rem;flex-wrap:wrap}
+.abt{flex:1;min-width:90px;border:1.5px solid rgba(255,183,197,.42);border-radius:10px;
+padding:.48rem .7rem;font-size:.73rem;font-weight:700;
+font-family:‘Zen Maru Gothic’,sans-serif;cursor:pointer;transition:all .16s;
+background:#fff;color:var(–pk2)}
+.abt:hover{background:var(–pk3);transform:translateY(-1px)}
+.abt.primary{background:linear-gradient(135deg,var(–pk2),var(–pu));border-color:transparent;color:#fff;box-shadow:0 3px 11px rgba(244,136,154,.26)}
+.abt.primary:hover{box-shadow:0 5px 16px rgba(244,136,154,.4)}
+.abt.done{background:#a8d8a8!important;border-color:transparent!important;color:#fff!important}
 
-h1 {
-font-size: clamp(1.4rem, 5vw, 2rem);
-font-weight: 700;
-color: var(–text);
-line-height: 1.4;
-margin-bottom: 0.4rem;
-}
+/* tweet */
+.tweet-btn{width:100%;margin-top:.55rem;background:linear-gradient(135deg,#1d9bf0,#1a8cd8);
+color:#fff;border:none;border-radius:10px;padding:.55rem;
+font-family:‘Zen Maru Gothic’,sans-serif;font-size:.8rem;font-weight:700;
+cursor:pointer;transition:all .18s;
+display:flex;align-items:center;justify-content:center;gap:6px;
+box-shadow:0 3px 12px rgba(29,155,240,.26)}
+.tweet-btn:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgba(29,155,240,.38)}
+.tweet-btn svg{width:14px;height:14px;fill:#fff;flex-shrink:0}
 
-h1 .accent {
-background: linear-gradient(135deg, var(–pink-deep), var(–purple));
--webkit-background-clip: text;
--webkit-text-fill-color: transparent;
-background-clip: text;
-}
+/* ht */
+.ht-wrap{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.6rem;align-items:center}
+.ht-chip{background:rgba(29,155,240,.09);border:1px solid rgba(29,155,240,.28);color:#1d9bf0;
+font-size:.68rem;font-weight:600;padding:3px 9px;border-radius:99px;cursor:pointer;transition:all .13s;
+font-family:‘Zen Maru Gothic’,sans-serif}
+.ht-chip:hover{background:rgba(29,155,240,.16)}
+.ht-chip.off{background:rgba(150,150,150,.07);border-color:rgba(150,150,150,.18);color:var(–txs)}
+.ht-add{background:transparent;border:1.5px dashed rgba(255,183,197,.48);color:var(–pk2);
+font-size:.68rem;font-weight:600;padding:3px 9px;border-radius:99px;cursor:pointer;transition:all .13s;
+font-family:‘Zen Maru Gothic’,sans-serif}
+.ht-add:hover{background:var(–pk3)}
 
-.header-sub {
-font-size: 0.82rem;
-color: var(–text-light);
-line-height: 1.7;
-}
-
-/* カード共通 */
-.card {
-background: var(–white);
-border-radius: 20px;
-padding: 1.5rem;
-margin-bottom: 1rem;
-box-shadow: 0 4px 24px var(–shadow), 0 1px 4px rgba(0,0,0,0.04);
-border: 1.5px solid rgba(255,183,197,0.3);
-animation: fadeUp 0.6s ease both;
-}
-
-@keyframes fadeUp {
-from { opacity: 0; transform: translateY(16px); }
-to { opacity: 1; transform: translateY(0); }
-}
-
-.card:nth-child(2) { animation-delay: 0.1s; }
-.card:nth-child(3) { animation-delay: 0.2s; }
-.card:nth-child(4) { animation-delay: 0.3s; }
-
-.card-title {
-font-size: 0.8rem;
-font-weight: 700;
-color: var(–pink-deep);
-letter-spacing: 0.08em;
-margin-bottom: 1rem;
-display: flex;
-align-items: center;
-gap: 6px;
-}
-
-.card-title::before {
-content: ‘’;
-display: inline-block;
-width: 6px;
-height: 6px;
-background: linear-gradient(135deg, var(–pink-deep), var(–purple));
-border-radius: 50%;
-}
-
-/* 設定グリッド */
-.settings-grid {
-display: grid;
-grid-template-columns: 1fr 1fr;
-gap: 0.8rem;
-}
-
-@media (max-width: 480px) {
-.settings-grid { grid-template-columns: 1fr; }
-}
-
-.input-group label {
-display: block;
-font-size: 0.75rem;
-color: var(–text-light);
-margin-bottom: 5px;
-font-weight: 500;
-}
-
-.input-group input, .input-group textarea {
-width: 100%;
-border: 1.5px solid rgba(255,183,197,0.5);
-border-radius: 12px;
-padding: 0.65rem 0.9rem;
-font-family: ‘Zen Maru Gothic’, sans-serif;
-font-size: 0.9rem;
-color: var(–text);
-background: var(–pink-light);
-outline: none;
-transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
-resize: none;
-}
-
-.input-group input:focus, .input-group textarea:focus {
-border-color: var(–pink-deep);
-background: white;
-box-shadow: 0 0 0 3px rgba(244,136,154,0.12);
-}
-
-.input-group textarea {
-min-height: 130px;
-line-height: 1.7;
-}
-
-/* ボタン */
-.btn-convert {
-width: 100%;
-background: linear-gradient(135deg, var(–pink-deep) 0%, #e87fa0 50%, var(–purple) 100%);
-color: white;
-border: none;
-border-radius: 14px;
-padding: 1rem;
-font-family: ‘Zen Maru Gothic’, sans-serif;
-font-size: 1rem;
-font-weight: 700;
-cursor: pointer;
-letter-spacing: 0.05em;
-transition: all 0.25s ease;
-box-shadow: 0 4px 20px rgba(244,136,154,0.4);
-position: relative;
-overflow: hidden;
-margin-top: 0.5rem;
-}
-
-.btn-convert::before {
-content: ‘’;
-position: absolute;
-inset: 0;
-background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
-opacity: 0;
-transition: opacity 0.2s;
-}
-
-.btn-convert:hover:not(:disabled)::before { opacity: 1; }
-.btn-convert:hover:not(:disabled) {
-transform: translateY(-2px);
-box-shadow: 0 8px 28px rgba(244,136,154,0.5);
-}
-.btn-convert:active:not(:disabled) { transform: translateY(0); }
-
-.btn-convert:disabled {
-opacity: 0.65;
-cursor: not-allowed;
-transform: none;
-}
-
-/* ローディング */
-.loading-wrap {
-display: flex;
-align-items: center;
-justify-content: center;
-gap: 10px;
-padding: 1.5rem 0;
-color: var(–text-light);
-font-size: 0.85rem;
-}
-
-.dots {
-display: flex;
-gap: 5px;
-}
-
-.dots span {
-width: 7px;
-height: 7px;
-background: var(–pink-deep);
-border-radius: 50%;
-display: inline-block;
-animation: dotBounce 1.2s ease-in-out infinite;
-}
-
-.dots span:nth-child(2) { animation-delay: 0.2s; background: #e087a0; }
-.dots span:nth-child(3) { animation-delay: 0.4s; background: var(–purple); }
-
-@keyframes dotBounce {
-0%, 80%, 100% { transform: translateY(0); }
-40% { transform: translateY(-8px); }
-}
-
-/* 出力エリア */
-.output-card {
-display: none;
-position: relative;
-}
-
-.output-card.show { display: block; }
-
-.output-label {
-font-size: 0.75rem;
-color: var(–text-light);
-margin-bottom: 0.8rem;
-display: flex;
-align-items: center;
-gap: 6px;
-}
-
-.output-text {
-background: linear-gradient(135deg, var(–pink-light), var(–purple-light));
-border: 1.5px solid rgba(255,183,197,0.5);
-border-radius: 14px;
-padding: 1.2rem 1.3rem;
-font-size: 0.93rem;
-line-height: 1.9;
-color: var(–text);
-white-space: pre-wrap;
-word-break: break-word;
-min-height: 80px;
-font-family: ‘Kosugi Maru’, sans-serif;
-}
-
-.copy-btn {
-position: absolute;
-top: 3.2rem;
-right: 1.8rem;
-background: white;
-border: 1.5px solid rgba(255,183,197,0.6);
-border-radius: 10px;
-padding: 5px 12px;
-font-size: 0.72rem;
-font-family: ‘Zen Maru Gothic’, sans-serif;
-color: var(–pink-deep);
-font-weight: 700;
-cursor: pointer;
-transition: all 0.2s;
-box-shadow: 0 2px 8px var(–shadow);
-}
-
-.copy-btn:hover {
-background: var(–pink-light);
-transform: scale(1.05);
-}
-
-.copy-btn.copied {
-background: var(–pink-deep);
-color: white;
-border-color: var(–pink-deep);
-}
-
-/* エラー */
-.error-msg {
-background: #fff0f0;
-border: 1.5px solid #ffb3b3;
-color: #c0392b;
-border-radius: 12px;
-padding: 0.9rem 1rem;
-font-size: 0.82rem;
-line-height: 1.6;
-display: none;
-}
-
-.error-msg.show { display: block; }
-
-/* フッター */
-.footer {
-text-align: center;
-margin-top: 2.5rem;
-font-size: 0.72rem;
-color: var(–text-light);
-opacity: 0.7;
-}
-
-/* トースト */
-.toast {
-position: fixed;
-bottom: 2rem;
-left: 50%;
-transform: translateX(-50%) translateY(20px);
-background: var(–text);
-color: white;
-padding: 0.6rem 1.4rem;
-border-radius: 99px;
-font-size: 0.8rem;
-opacity: 0;
-transition: all 0.3s ease;
-pointer-events: none;
-z-index: 100;
-}
-
-.toast.show {
-opacity: 1;
-transform: translateX(-50%) translateY(0);
-}
-
-/* 絵文字ハート */
-.heart-pop {
-position: fixed;
-pointer-events: none;
-z-index: 200;
-font-size: 1.3rem;
-animation: heartFloat 1.2s ease forwards;
-}
-
-@keyframes heartFloat {
-0% { opacity: 1; transform: translateY(0) scale(1); }
-100% { opacity: 0; transform: translateY(-80px) scale(1.4); }
-}
+/* err */
+.err{background:#fff0f0;border:1.5px solid #ffb3b3;color:#c0392b;border-radius:13px;
+padding:.85rem .95rem;font-size:.78rem;line-height:1.65;display:none;margin-bottom:.8rem}
+.err.show{display:block}
+/* toast */
+.toast{position:fixed;bottom:1.8rem;left:50%;transform:translateX(-50%) translateY(14px);
+background:rgba(61,37,53,.9);color:#fff;padding:.5rem 1.3rem;border-radius:99px;
+font-size:.76rem;opacity:0;transition:all .25s;pointer-events:none;z-index:300;
+backdrop-filter:blur(6px);white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* heart pop */
+.hp{position:fixed;pointer-events:none;z-index:400;animation:hA 1.1s ease forwards}
+@keyframes hA{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-75px) scale(1.45)}}
+.footer{text-align:center;margin-top:2.2rem;font-size:.68rem;color:var(–txs);opacity:.6;line-height:1.85}
 </style>
 
 </head>
 <body>
+<div class="app">
 
-<div class="wrapper">
-  <!-- ヘッダー -->
-  <div class="header">
-    <div class="header-badge">🎀 HOBBY ACCOUNT CONVERTER</div>
-    <h1>ホビ垢構文<span class="accent">変換ちゃん</span>🤍</h1>
-    <p class="header-sub">普通の感想をうざかわいいホビ垢構文に変換するよ ՞ ̥_ ̫ _ ̥՞</p>
-  </div>
+<div class="hd">
+  <div class="hd-badge">🎀 HOBBY ACCOUNT CONVERTER</div>
+  <h1>ホビ垢構文<em>変換ちゃん</em></h1>
+  <p class="hd-sub">普通の感想をうざかわいいホビ垢構文に変換するよ ✨<br>強度とハートカラーをカスタムして投稿まで一気にできるよ 💭</p>
+</div>
 
-  <!-- 設定カード -->
+<!-- ① 設定 -->
 
-  <div class="card">
-    <div class="card-title">ユーザー設定</div>
-    <div class="settings-grid">
-      <div class="input-group">
-        <label>🙋 自分の名前（省略可）</label>
-        <input type="text" id="selfName" placeholder="私" maxlength="20">
-      </div>
-      <div class="input-group">
-        <label>⭐ 推しの名前（省略可）</label>
-        <input type="text" id="oshiName" placeholder="推し" maxlength="20">
-      </div>
-    </div>
-  </div>
-
-  <!-- 入力カード -->
-
-  <div class="card">
-    <div class="card-title">変換したい感想を入力</div>
-    <div class="input-group">
-      <textarea id="inputText" placeholder="例）今日はライブ楽しかった。目が合って嬉しかった。帰りも幸せな気持ちだった。"></textarea>
-    </div>
-    <button class="btn-convert" id="convertBtn" onclick="convertText()">
-      ✨ ホビ垢構文に変換する
-    </button>
-  </div>
-
-  <!-- ローディング -->
-
-  <div id="loadingWrap" style="display:none;">
-    <div class="card">
-      <div class="loading-wrap">
-        <div class="dots">
-          <span></span><span></span><span></span>
-        </div>
-        <span>変換中だよ、ちょっとまってね🎀</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- エラー -->
-
-  <div class="error-msg" id="errorMsg"></div>
-
-  <!-- 出力カード -->
-
-  <div class="card output-card" id="outputCard">
-    <div class="card-title">変換後のホビ垢構文 💭</div>
-    <button class="copy-btn" id="copyBtn" onclick="copyText()">コピー</button>
-    <div class="output-text" id="outputText"></div>
-  </div>
-
-  <div class="footer">
-    AIがいい感じにホビ垢っぽく変換してくれるよ🏆<br>
-    変換結果はランダムなのでなんどでも試してね ⸝⸝⸝
+<div class="card">
+  <div class="ct">ユーザー設定</div>
+  <div class="g2">
+    <div class="ig"><label>🙋 自分の名前</label><input id="selfName" type="text" placeholder="私" maxlength="20"></div>
+    <div class="ig"><label>⭐ 推しの名前</label><input id="oshiName" type="text" placeholder="推し" maxlength="20"></div>
   </div>
 </div>
 
+<!-- ② ハートカラー -->
+
+<div class="card">
+  <div class="ct">ハートカラー</div>
+  <div class="heart-section">
+    <div class="heart-preview">
+      <div class="heart-icon" id="heartPreview">🩷</div>
+      <div class="heart-preview-txt">
+        <strong id="heartColorName">ピンク（デフォルト）</strong>
+        メンバーカラーに合わせてカスタムできるよ
+      </div>
+    </div>
+    <div>
+      <div class="swatch-label">カラーを選ぶ</div>
+      <div class="swatch-grid" id="swatchGrid"></div>
+    </div>
+    <div class="custom-color-row">
+      <label for="customColorPick">🎨 その他のカラー</label>
+      <input type="color" id="customColorPick" value="#ff6b9d" title="カスタムカラー">
+      <span style="font-size:.68rem;color:var(--txs)">← タップして自由に選んでね</span>
+    </div>
+  </div>
+</div>
+
+<!-- ③ 強度 -->
+
+<div class="card">
+  <div class="ct">強度カスタム</div>
+  <div class="sliders">
+    <div class="sl-row">
+      <div class="sl-h"><span class="sl-lbl">💪 感情の重さ</span><span class="sl-val" id="ivLbl">ふつう</span></div>
+      <input type="range" id="intensity" min="0" max="100" value="50" oninput="updSl(this,'ivLbl',['軽め','ふつう','激重'])">
+    </div>
+    <div class="sl-row">
+      <div class="sl-h"><span class="sl-lbl">✨ 絵文字の量</span><span class="sl-val" id="evLbl">ふつう</span></div>
+      <input type="range" id="emojiLevel" min="0" max="100" value="55" oninput="updSl(this,'evLbl',['控えめ','ふつう','盛り盛り'])">
+    </div>
+    <div class="sl-row">
+      <div class="sl-h"><span class="sl-lbl">↩️ 改行の多さ</span><span class="sl-val" id="lvLbl">ふつう</span></div>
+      <input type="range" id="lineBreak" min="0" max="100" value="55" oninput="updSl(this,'lvLbl',['まとめて','ふつう','細かく'])">
+    </div>
+  </div>
+</div>
+
+<!-- ④ 入力 -->
+
+<div class="card">
+  <div class="ct">変換したい感想を入力</div>
+  <div class="ig">
+    <textarea id="inputText" placeholder="例）今日のライブ最高だった！目が合って心臓くるしかった。帰り道もずっとにこにこしてた。"></textarea>
+  </div>
+  <button class="btn-cvt" id="cvtBtn" onclick="onCvt(event)">✨ ホビ垢構文に変換する</button>
+</div>
+
+<div id="loadW"><div class="card"><div class="ld-in"><div class="dots"><span></span><span></span><span></span></div><span>変換中だよ、ちょっとまってね🎀</span></div></div></div>
+<div class="err" id="errMsg"></div>
+
+<!-- ⑤ 出力 -->
+
+<div class="card" id="outCard">
+  <div class="ct">変換結果 💭</div>
+  <div class="stats-wrap" id="statsWrap"></div>
+  <div class="out-txt" id="outTxt"></div>
+  <div class="out-acts">
+    <button class="abt primary" id="copyBtn" onclick="doCopy()">📋 コピー</button>
+    <button class="abt" onclick="onCvt(null,true)">🔁 再変換</button>
+  </div>
+  <button class="tweet-btn" onclick="doTweet()">
+    <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.742l7.748-8.876L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+    X (Twitter) に投稿する
+  </button>
+  <div class="ht-wrap" id="htWrap"></div>
+</div>
+
+<div class="footer">Ctrl / Cmd + Enter でも変換できるよ ⸝⸝⸝<br>AIが文脈を読んで関係性の物語として変換するよ 🏆</div>
+</div>
 <div class="toast" id="toast"></div>
 
 <script>
-// 浮遊デコ
-const decos = ['🎀','🤍','⭐','🌸','💭','✨','🏆','🌷'];
-function spawnDeco() {
-  const el = document.createElement('div');
-  el.className = 'floating-deco';
-  el.textContent = decos[Math.floor(Math.random() * decos.length)];
-  el.style.left = Math.random() * 100 + 'vw';
-  el.style.fontSize = (1 + Math.random() * 1.5) + 'rem';
-  const dur = 12 + Math.random() * 10;
-  el.style.animationDuration = dur + 's';
-  el.style.animationDelay = (Math.random() * 5) + 's';
-  document.body.appendChild(el);
-  setTimeout(() => el.remove(), (dur + 5) * 1000);
+// ══════════════════════════════════════
+//  HEART COLOR DATA
+// ══════════════════════════════════════
+const HEART_COLORS = [
+  {name:"ピンク",    color:"#ff6b9d", emoji:"🩷", heart:"🩷"},
+  {name:"レッド",    color:"#e74c3c", emoji:"❤️",  heart:"❤️"},
+  {name:"オレンジ",  color:"#f39c12", emoji:"🧡", heart:"🧡"},
+  {name:"イエロー",  color:"#f1c40f", emoji:"💛", heart:"💛"},
+  {name:"グリーン",  color:"#2ecc71", emoji:"💚", heart:"💚"},
+  {name:"ライトブルー",color:"#5bc8f5",emoji:"🩵",heart:"🩵"},
+  {name:"ブルー",    color:"#3498db", emoji:"💙", heart:"💙"},
+  {name:"パープル",  color:"#9b59b6", emoji:"💜", heart:"💜"},
+  {name:"ホワイト",  color:"#c8b4b8", emoji:"🤍", heart:"🤍"},
+  {name:"ブラック",  color:"#2c2c2c", emoji:"🖤", heart:"🖤"},
+  {name:"ブラウン",  color:"#795548", emoji:"🤎", heart:"🤎"},
+  {name:"グレー",    color:"#9a9a9a", emoji:"🩶", heart:"🩶"},
+];
+
+// 顔文字セット
+const KAOMOJI = [
+  "ദ്ദിᐢ- ̫-ᐢ₎","˘ ᴗ  ̫ ᴗ ˘","ᐡ• ·̫ •̥ᐡ","( ᴖ ̫ᴖ )",
+  "ᐡ⸝⸝⊃ ·̭ •̥ ⸝⸝ᐡ","ᵕ ̥_ .̫ _ ̥ᵕ","꒰ – ·̫ – ꒱ﾉ",
+  "(ᐡ｡› ·̫ ‹｡ᐡ )੭","(ᐡㅠ ‧̫ ㅠᐡ)","ᐡ⸝⸝> ·̫ <⸝⸝ᐡ"
+];
+
+// 絵文字ペア
+const EMOJI_PAIRS = [
+  "👼🏻💞","🆗💘","👶🏻🎀","😽💞","🪄✨","🐻‍❄️🩵",
+  "✊🏻🌟","😭👈🏻","🆙💖","🥲🩶","🐑💤","🍒💬",
+  "💯✨","🎀🩶","💭🎀","😻❤️‍🔥","🤩💖","🥂🫧",
+  "😿🌀","🤝🏻🌟","🍼🩵","💮✨","😭⤴️"
+];
+
+// 語録
+const VOCAB = {
+  greeting: ["ずっしょ","にっこり","出席確認","答え合わせ","浮かれぽんち","モチベなくて","今日行くか迷ったんだけど","ふたりぼっちの世界","しんだ","満身創痍"],
+  praise: ["にゃーーいすき","できる男","しごでき","あまあま","ゲロ甘","いとちー","とくベチュ","はなまる","だいてんさいさん","ときめきこんてんChu","大满足","だいすきだいすき"],
+  thanks: ["見つけてくれて","覚えてくれて","一生忘れられない","いちばん大切にしてくれて","過去一時間使ってくれて","初めて見る顔してくれて","大満足させてくれる","好きでいさせてくれてありがとう","しあわせ空間","いっぱいありがとう","これからもずーっと","たくさん考えてくれて","抱えきれないしあわせ","予想以上のことしてくれて","指名してくれた","戻ってきてくれて"],
+  bodyReaction: ["心臓くるしー","心臓とくんとする","にんまり","顔ない","帰り道","抱えきれなくて幸せ歩いた","転げ落ちるくらいドカ笑いさせてくれて","記憶喪失","すきすぎスキップ帰宅"],
+  special: ["ひみつ","ずるい","特別","奇跡","リベンジ","ここでいけると思ってなくてびっくりした","天井だったのに見つけてくれた","行動で示してくれた","特等席","答え合わせ"],
+  negative: ["納得いく反応じゃなかったけど","困らせちゃってごめんね","わがままに付き合わせちゃってごめんね"],
+  oshiDynamic: ["{O}も100点だった","{O}がしてくれること全部たからもの","{O}だいすき増した","{O}の特等席！","{O}しか{S}のこと管理できない","{O}が{S}のこと見る時の顔がいちばん好き","{S}を喜ばせる天才","{S}のこと全部わかってる","{S}@しあわせもの","頼んでないのに自分からやってくるのずるい","骨埋めた","墓立てた","{O}しかいないんだ","{O}もせかいいちしあわせでいてほしい","{S}のこと幸せにしてくれるひと"],
+};
+
+const DEFAULT_HASHTAGS = ["#ホビ垢構文ジェネレーター","#ホビ垢","#推し活"];
+
+// ══════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════
+let activeHeartIdx = 0;
+let customHex      = null;   // カスタムカラー選択時
+let lastResult     = "";
+let htActive       = new Set(DEFAULT_HASHTAGS);
+let customHts      = [];
+
+// ══════════════════════════════════════
+//  UTILS
+// ══════════════════════════════════════
+const $ = id => document.getElementById(id);
+const pick  = arr => arr[Math.floor(Math.random() * arr.length)];
+const pickN = (arr,n) => [...arr].sort(()=>Math.random()-.5).slice(0,Math.min(n,arr.length));
+const fillN = (t,o,s) => t.replace(/\{O\}/g,o).replace(/\{S\}/g,s);
+
+function showToast(msg,dur=2200){
+  const t=$("toast");t.textContent=msg;t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),dur);
 }
-for (let i = 0; i < 8; i++) setTimeout(spawnDeco, i * 2000);
-setInterval(spawnDeco, 4000);
+function heartPop(x,y,emoji){
+  for(let i=0;i<6;i++) setTimeout(()=>{
+    const el=document.createElement("div");el.className="hp";
+    el.textContent=emoji||"🤍";
+    el.style.cssText="font-size:"+(1+Math.random()*.6)+"rem;left:"+(x+(Math.random()-.5)*70)+"px;top:"+(y+(Math.random()-.5)*50)+"px";
+    document.body.appendChild(el);setTimeout(()=>el.remove(),1200);
+  },i*60);
+}
+const DECOS=["🎀","🤍","⭐","🌸","💭","✨","🏆","🌷"];
+function spawnDeco(){
+  const el=document.createElement("div");el.className="deco";
+  el.textContent=DECOS[Math.floor(Math.random()*DECOS.length)];
+  el.style.left=(Math.random()*100)+"vw";
+  el.style.fontSize=(1+Math.random()*1.3)+"rem";
+  const d=12+Math.random()*9;
+  el.style.animationDuration=d+"s";el.style.animationDelay=(Math.random()*3)+"s";
+  document.body.appendChild(el);setTimeout(()=>el.remove(),(d+5)*1000);
+}
+for(let i=0;i<8;i++)setTimeout(spawnDeco,i*1700);setInterval(spawnDeco,3500);
 
-// トースト
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2200);
+// ══════════════════════════════════════
+//  HEART COLOR UI
+// ══════════════════════════════════════
+function getActiveHeart(){
+  if(customHex) return {name:"カスタム",color:customHex,heart:"🤍",emoji:"🎨"};
+  return HEART_COLORS[activeHeartIdx];
 }
 
-// ハートポップ
-function heartPop(x, y) {
-  const hearts = ['🤍','🎀','✨','💭','🌸'];
-  for (let i = 0; i < 4; i++) {
-    setTimeout(() => {
-      const el = document.createElement('div');
-      el.className = 'heart-pop';
-      el.textContent = hearts[Math.floor(Math.random() * hearts.length)];
-      el.style.left = (x + (Math.random()-0.5)*60) + 'px';
-      el.style.top = (y + (Math.random()-0.5)*40) + 'px';
-      document.body.appendChild(el);
-      setTimeout(() => el.remove(), 1300);
-    }, i * 80);
-  }
+function updateHeartPreview(){
+  const h=getActiveHeart();
+  $("heartPreview").textContent=h.heart;
+  $("heartColorName").textContent=h.name;
+  document.documentElement.style.setProperty("--heart",h.color);
 }
 
-// コピー
-async function copyText() {
-  const text = document.getElementById('outputText').textContent;
-  try {
-    await navigator.clipboard.writeText(text);
-    const btn = document.getElementById('copyBtn');
-    btn.textContent = 'コピー完了🤍';
-    btn.classList.add('copied');
-    showToast('クリップボードにコピーしたよ🎀');
-    setTimeout(() => {
-      btn.textContent = 'コピー';
-      btn.classList.remove('copied');
-    }, 2000);
-  } catch(e) {
-    showToast('コピーに失敗しちゃった…');
-  }
+function initSwatches(){
+  const g=$("swatchGrid");
+  HEART_COLORS.forEach((h,i)=>{
+    const sw=document.createElement("button");
+    sw.className="sw"+(i===0?" on":"");
+    sw.style.background=h.color;
+    sw.title=h.name;
+    sw.innerHTML=`<span class="sw-emoji">✓</span>`;
+    sw.onclick=()=>{
+      customHex=null;
+      activeHeartIdx=i;
+      document.querySelectorAll(".sw").forEach(s=>s.classList.remove("on"));
+      sw.classList.add("on");
+      updateHeartPreview();
+    };
+    g.appendChild(sw);
+  });
+  // カスタムカラーピッカー連携
+  $("customColorPick").addEventListener("input",e=>{
+    customHex=e.target.value;
+    document.querySelectorAll(".sw").forEach(s=>s.classList.remove("on"));
+    updateHeartPreview();
+  });
 }
 
-// 変換メイン
-async function convertText() {
-  const inputText = document.getElementById('inputText').value.trim();
-  const selfName = document.getElementById('selfName').value.trim() || '私';
-  const oshiName = document.getElementById('oshiName').value.trim() || '推し';
+// ══════════════════════════════════════
+//  SLIDERS
+// ══════════════════════════════════════
+function updSl(el,lid,labels){
+  const v=+el.value;
+  $(lid).textContent=labels[v<=33?0:v<=66?1:2];
+  el.style.setProperty("--pct",v+"%");
+}
+function initSliders(){
+  ["intensity","emojiLevel","lineBreak"].forEach(id=>{
+    const el=$(id);el.style.setProperty("--pct",el.value+"%");
+  });
+}
 
-  if (!inputText) {
-    showToast('感想を入力してね💭');
-    document.getElementById('inputText').focus();
-    return;
-  }
+// ══════════════════════════════════════
+//  HASHTAGS
+// ══════════════════════════════════════
+function renderHtWrap(){
+  const w=$("htWrap");w.innerHTML="";
+  [...DEFAULT_HASHTAGS,...customHts].forEach(ht=>{
+    const c=document.createElement("button");
+    c.className="ht-chip"+(htActive.has(ht)?"":" off");
+    c.textContent=ht;
+    c.onclick=()=>{htActive.has(ht)?htActive.delete(ht):htActive.add(ht);renderHtWrap()};
+    w.appendChild(c);
+  });
+  const add=document.createElement("button");
+  add.className="ht-add";add.textContent="+ タグ追加";
+  add.onclick=()=>{
+    const tag=prompt("追加するハッシュタグを入力（#は自動でつくよ）");
+    if(!tag)return;
+    const clean=tag.startsWith("#")?tag.trim():"#"+tag.trim();
+    if(!customHts.includes(clean)){customHts.push(clean);htActive.add(clean);}
+    renderHtWrap();
+  };
+  w.appendChild(add);
+}
 
-  const btn = document.getElementById('convertBtn');
-  btn.disabled = true;
+// ══════════════════════════════════════
+//  PROMPT
+// ══════════════════════════════════════
+function buildPrompt(inputText,selfName,oshiName){
+  const h=getActiveHeart();
+  const iv=+$("intensity").value,ev=+$("emojiLevel").value,lv=+$("lineBreak").value;
 
-  document.getElementById('loadingWrap').style.display = 'block';
-  document.getElementById('outputCard').classList.remove('show');
-  document.getElementById('errorMsg').classList.remove('show');
+  // 絵文字・顔文字をランダムにピックしてプロンプトへ
+  const emojiSample = pickN(EMOJI_PAIRS,8).join(" ");
+  const kaoSample   = pickN(KAOMOJI,4).join("  ");
 
-  const prompt = `あなたは「ホビ垢（趣味アカウント）」を運用している、愛が重めで語彙力が独特なオタクになりきってください。
-ユーザーが入力した「普通の感想」を、以下の【語録リスト】と【変換ルール】に基づいて、ホビ垢特有の文章（ツイート風）に変換してください。
+  const heartEmoji  = h.heart;
+  const heartNote   = `ハートの絵文字は「${heartEmoji}」を使う（メンバーカラー反映）`;
 
-## ユーザー設定
+  const iRule = iv<=33?"感情表現はやや控えめ・読みやすさ重視":iv<=66?"ホビ垢らしい感情表現・語録を適切に盛り込む":"感情全開・語録最大活用・誇張表現多め・重ため";
+  const eRule = ev<=33?"絵文字は文末に1〜2個":ev<=66?"絵文字は4〜6個":"絵文字は8個以上・ほぼ毎フレーズにつける";
+  const lRule = lv<=33?"改行少なめ・1〜2文まとめる":lv<=66?"3〜4フレーズごとに改行":"1フレーズごとに改行・ホビ垢特有の細かいテンポ";
+
+  const greet = pickN(VOCAB.greeting,3).join("、");
+  const pr    = pickN(VOCAB.praise,4).join("、");
+  const th    = pickN(VOCAB.thanks,4).join("、");
+  const br    = pickN(VOCAB.bodyReaction,3).join("、");
+  const sp    = pickN(VOCAB.special,3).join("、");
+  const od    = pickN(VOCAB.oshiDynamic,5).map(t=>fillN(t,oshiName,selfName)).join("、");
+
+  const txt=inputText;
+  const hints=[
+    /ライブ|現場|コンサート|公演|舞台|イベ|チェキ|握手|対面/.test(txt)&&"現場・イベント系",
+    /目が合|見てくれ|見つけ|視線|指名/.test(txt)&&"目が合う・認識エピソード",
+    /嬉し|幸せ|楽し|最高|よかっ|好き|かわい/.test(txt)&&"ポジティブ感情",
+    /悲し|泣|辛|切な|苦し/.test(txt)&&"ネガティブ感情",
+    /笑|ニコ|にこ/.test(txt)&&"笑顔エピソード",
+    /覚え|名前/.test(txt)&&"覚えてもらったエピソード",
+  ].filter(Boolean).join("、")||"特になし";
+
+  return `あなたは「ホビ垢（趣味アカウント）」を運用しているオタクになりきり、感想をホビ垢構文に変換します。
+
+## 設定
 - 自分の名前: ${selfName}
-- 演者の名前: ${oshiName}
+- 推しの名前: ${oshiName}
 
-## 変換ルール
-1. **ひらがな多用**: 漢字を減らし、ひらがなを多用する（例：愛しい→いとちー、可愛い→かあいー）。
-2. **語録の使用**: 文脈に合わせて、以下の【語録リスト】から適切な言葉を必ず複数盛り込む。
-3. **感情の誇張**: 些細なことでも「優勝」「天才」「しあわせ」と表現する。
-4. **マウントと謙遜の同居**: 「特別扱いされた」という優越感と、「私なんて」という謙遜を混ぜる。
-5. **絵文字**: 文末や文中に適度に量産型っぽい絵文字（ 🤍 🎀 ՞ ̥_ ̫ _ ̥՞ 💭 🏆 ⸝⸝⸝ ✨ 😭 等）を使用する。
-6. **出力のみ**: 変換後のホビ垢構文だけを出力し、説明や前置きは一切書かない。ツイートとして自然に読める文章にする。
+## ホビ垢構文の本質
+・感想ではなく「${selfName}と${oshiName}の関係性の物語」として語る
+・出来事を奇跡・特別なこととしてロマン化する
+・演者の行動を「${selfName}のためにしてくれた」として解釈する
+・「見つけてもらった」「覚えてもらった」体験を特別なイベントとして描写する
+・感情は誇張気味に（しんだ・記憶喪失・心臓くるしー・満身創痍など）
+・文法より気持ち優先・文が途中で途切れてもOK
+・ひらがな多用（だいすき・しあわせ・ありがとう・すきすぎ等）
+・「自分」と「演者」の関係が中心・評価より物語
 
-## 語録リスト
-- 挨拶・状態: ずっしょ、にっこり、出席確認、答え合わせ、ふたりぼっちの世界、モチベなくて、浮かれぽんち、${oshiName}の特等席！、墓立てた、骨埋めた
-- 褒め言葉: にゃーーいすき、できる男、しごでき、あまあま、ゲロ甘、大满足、いとちー、とくベチュ、はなまる、${oshiName}だいすき増した、${oshiName}も100点だった、やさしくて、${selfName}のこと全部わかってる、${selfName}を喜ばせる天才、${oshiName}がしてくれること全部たからもの、だいてんさいさん、ときめきこんてんChu
-- 感謝・反応: 見つけてくれて、一生忘れられない、いちばん大切にしてくれて、過去一時間使ってくれて、初めて見る顔してくれて、大満足させてくれる、好きでいさせてくれてありがとう、しあわせ空間、いっぱいありがとう、これからもずーっと、たくさん考えてくれて、抱えきれないしあわせ、${selfName}@しあわせもの、予想（想像）以上のことしてくれて
-- 感情・身体反応: 心臓くるしー、心臓とくんとする、にんまり、${oshiName}が${selfName}のこと見る時の顔がいちばん好き、頼んでないのに自分からやってくるのずるい、帰り道、抱えきれなくて幸せ歩いた、転げ落ちるくらいドカ笑いさせてくれて、顔ない
-- マウント・特別感: ひみつ、ずるい、特別、リベンジ、ここでいけると思ってなくてびっくりした、お友達からもいっぱい褒めてもらえて、周り（隣）のお姉さんからも褒めてもらえて、お友達が見届けてくれて、行動で示してくれた、やっぱり${oshiName}しか${selfName}のこと管理できない、天井だったのに見つけてくれた
-- 反省・ネガティブ: 納得いく反応じゃなかったけど、困らせちゃってごめんね、わがままに付き合わせちゃってごめんね、今日行くか迷ったんだけど
+## 絵文字・顔文字ルール
+・${heartNote}
+・${eRule}
+・以下の絵文字ペアから文脈に合うものを選んで使う: ${emojiSample}
+・以下の顔文字を文中に1〜2個自然に挿入する: ${kaoSample}
 
-## 出力例
-入力: 「今日はライブ楽しかった。目が合って嬉しかった。」
-出力: 「今日行くか迷ったんだけど行って大正解😭🤍 会場の${oshiName}くんも100点だったし、天井だったのに見つけてくれて過去一更新✨ ${selfName}のこと全部わかってる${oshiName}くんがだいてんさいさん！ふたりぼっちの世界だったね💭」
+## 強度・形式ルール
+・強度: ${iRule}
+・${lRule}
+・毎回わずかに異なる表現にする（ゆらぎ必須）
 
-では、以下の感想をホビ垢構文に変換してください（変換後の文章のみ出力してください）:
+## 語録候補（文脈に合うものだけ使う）
+挨拶: ${greet}
+褒め: ${pr}
+感謝: ${th}
+身体反応: ${br}
+特別感: ${sp}
+推し×自分: ${od}
+
+## 入力文脈: ${hints}
+
+## 出力ルール
+・変換後の文章のみ（説明・前置き・注釈なし）
+・X投稿として自然に読める
+
+## 変換する感想
 ${inputText}`;
+}
 
-  try {
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 1000,
-        messages: [{ role: "user", content: prompt }]
-      })
+// ══════════════════════════════════════
+//  CONVERT
+// ══════════════════════════════════════
+async function onCvt(e,retry=false){
+  if(e) heartPop(e.clientX,e.clientY+window.scrollY,getActiveHeart().heart);
+  const inputText=$("inputText").value.trim();
+  const selfName=$("selfName").value.trim()||"私";
+  const oshiName=$("oshiName").value.trim()||"推し";
+  if(!inputText){showToast("感想を入力してね💭");$("inputText").focus();return;}
+  const btn=$("cvtBtn");btn.disabled=true;
+  $("loadW").style.display="block";
+  $("outCard").classList.remove("show");
+  $("errMsg").classList.remove("show");
+  try{
+    const res=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        model:"claude-sonnet-4-20250514",max_tokens:1000,
+        messages:[{role:"user",content:buildPrompt(inputText,selfName,oshiName)}]
+      }),
     });
-
-    if (!response.ok) {
-      const err = await response.json().catch(() => ({}));
-      throw new Error(err.error?.message || `API error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    const text = data.content.map(b => b.text || '').join('').trim();
-
-    document.getElementById('outputText').textContent = text;
-    document.getElementById('outputCard').classList.add('show');
-
-    // ハートポップ
-    const rect = document.getElementById('outputCard').getBoundingClientRect();
-    heartPop(rect.left + rect.width/2, rect.top + window.scrollY);
-    showToast('変換できたよ🎀 コピーして使ってね！');
-
-    document.getElementById('outputCard').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-
-  } catch (e) {
-    const errEl = document.getElementById('errorMsg');
-    errEl.textContent = 'エラーが発生しちゃった…💦 もう一度試してみてね。(' + e.message + ')';
-    errEl.classList.add('show');
-  } finally {
-    document.getElementById('loadingWrap').style.display = 'none';
-    btn.disabled = false;
+    if(!res.ok){const er=await res.json().catch(()=>({}));throw new Error(er.error?.message||"API Error "+res.status);}
+    const data=await res.json();
+    lastResult=data.content.map(b=>b.text||"").join("").trim();
+    renderOutput(lastResult);
+    $("outCard").classList.add("show");
+    const rect=$("outCard").getBoundingClientRect();
+    heartPop(rect.left+rect.width/2,rect.top+window.scrollY+50,getActiveHeart().heart);
+    showToast(retry?"再変換したよ🔁":"変換できたよ🎀 投稿してね！");
+    setTimeout(()=>$("outCard").scrollIntoView({behavior:"smooth",block:"nearest"}),100);
+  }catch(err){
+    const el=$("errMsg");el.textContent="エラーが出ちゃった…💦 もう一度試してね。("+err.message+")";el.classList.add("show");
+  }finally{
+    $("loadW").style.display="none";btn.disabled=false;
   }
 }
 
-// Enterキーサポート（Ctrl/Cmd+Enter）
-document.getElementById('inputText').addEventListener('keydown', (e) => {
-  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') convertText();
-});
+// ══════════════════════════════════════
+//  OUTPUT
+// ══════════════════════════════════════
+function renderOutput(text){
+  const chars=text.length;
+  const lines=(text.match(/\n/g)||[]).length+1;
+  const emojis=(text.match(/[\u{1F300}-\u{1FFFF}\u{2600}-\u{27BF}]|⸝⸝⸝/gu)||[]).length;
+  $("statsWrap").innerHTML=
+    `<span class="sbadge">${chars}字</span>`+
+    `<span class="sbadge">${lines}行</span>`+
+    `<span class="sbadge">${emojis}絵文字</span>`;
+  $("outTxt").textContent=text;
+}
 
-// ボタンクリックでハートポップ
-document.getElementById('convertBtn').addEventListener('click', function(e) {
-  heartPop(e.clientX, e.clientY + window.scrollY);
-});
+async function doCopy(){
+  if(!lastResult){showToast("先に変換してね💭");return;}
+  try{
+    await navigator.clipboard.writeText(lastResult);
+    const b=$("copyBtn");b.textContent="✓ コピー完了";b.classList.add("done");
+    showToast("コピーしたよ🎀");
+    setTimeout(()=>{b.textContent="📋 コピー";b.classList.remove("done")},2000);
+  }catch{showToast("コピーに失敗しちゃった…");}
+}
+
+function doTweet(){
+  if(!lastResult){showToast("先に変換してね💭");return;}
+  const ht=[...htActive].join(" ");
+  const full=lastResult+(ht?"\n\n"+ht:"");
+  window.open("https://twitter.com/intent/tweet?text="+encodeURIComponent(full),"_blank","noopener");
+  showToast("Xの投稿画面を開いたよ🐦",2500);
+}
+
+document.addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key==="Enter")onCvt(null)});
+
+// ══════════════════════════════════════
+//  BOOT
+// ══════════════════════════════════════
+initSwatches();
+initSliders();
+renderHtWrap();
+updateHeartPreview();
 </script>
 
 </body>
