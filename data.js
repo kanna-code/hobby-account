@@ -4,18 +4,24 @@
 // ============================================================
 
 const HEART_COLORS = [
-{name:“ピンク”,      color:”#ff6b9d”, heart:“🩷”},
-{name:“レッド”,      color:”#e74c3c”, heart:“❤️”},
-{name:“オレンジ”,    color:”#f39c12”, heart:“🧡”},
-{name:“イエロー”,    color:”#f1c40f”, heart:“💛”},
-{name:“グリーン”,    color:”#2ecc71”, heart:“💚”},
-{name:“ライトブルー”,color:”#5bc8f5”, heart:“🩵”},
-{name:“ブルー”,      color:”#3498db”, heart:“💙”},
-{name:“パープル”,    color:”#9b59b6”, heart:“💜”},
-{name:“ホワイト”,    color:”#c8b4b8”, heart:“🤍”},
-{name:“ブラック”,    color:”#2c2c2c”, heart:“🖤”},
-{name:“ブラウン”,    color:”#795548”, heart:“🤎”},
-{name:“グレー”,      color:”#9a9a9a”, heart:“🩶”},
+{name:“ピンク”,        heart:“🩷”},
+{name:“レッド”,        heart:“❤️”},
+{name:“オレンジ”,      heart:“🧡”},
+{name:“イエロー”,      heart:“💛”},
+{name:“グリーン”,      heart:“💚”},
+{name:“ライトブルー”,  heart:“🩵”},
+{name:“ブルー”,        heart:“💙”},
+{name:“パープル”,      heart:“💜”},
+{name:“ホワイト”,      heart:“🤍”},
+{name:“ブラック”,      heart:“🖤”},
+{name:“ブラウン”,      heart:“🤎”},
+{name:“グレー”,        heart:“🩶”},
+{name:“レッドリボン”,  heart:“❤️‍🔥”},
+{name:“スパークル”,    heart:“💖”},
+{name:“ドット”,        heart:“💗”},
+{name:“カーリー”,      heart:“💓”},
+{name:“アロー”,        heart:“💘”},
+{name:“エクスクラメーション”, heart:“❣️”},
 ];
 
 const KAOMOJI = [
