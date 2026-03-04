@@ -59,19 +59,13 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .heart-preview-txt strong{color:var(--tx);font-size:.88rem;display:block}
 .heart-preview-txt span{font-size:.72rem;color:var(--txs)}
 .swatch-lbl{font-size:.7rem;color:var(--txs);font-weight:600;margin-bottom:.45rem}
-.swatch-grid{display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:.65rem}
-.sw{width:36px;height:36px;border-radius:50%;cursor:pointer;border:2.5px solid transparent;
-  transition:all .18s;position:relative;flex-shrink:0}
-.sw:hover{transform:scale(1.1)}
-.sw.on{border-color:#fff;box-shadow:0 0 0 2.5px var(--heart),0 3px 10px rgba(0,0,0,.18);transform:scale(1.15)}
-.sw.on::after{content:"✓";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-  font-size:.65rem;color:#fff;font-weight:900;text-shadow:0 1px 3px rgba(0,0,0,.5)}
-.custom-row{display:flex;align-items:center;gap:.6rem}
-.custom-row label{font-size:.7rem;color:var(--txs)}
-#customColorPick{width:36px;height:36px;border-radius:50%;border:2px solid rgba(255,183,197,.4);
-  padding:2px;cursor:pointer;background:none}
-#customColorPick::-webkit-color-swatch{border-radius:50%;border:none}
-#customColorPick::-webkit-color-swatch-wrapper{padding:0;border-radius:50%}
+.heart-chip-wrap{display:flex;flex-wrap:wrap;gap:.4rem}
+.hchip{border:2px solid rgba(200,150,180,.2);border-radius:10px;padding:.28rem .55rem;
+  font-size:1.15rem;cursor:pointer;background:var(--pk3);transition:all .15s;
+  line-height:1.3;user-select:none}
+.hchip:hover{border-color:var(--pk2);transform:scale(1.08)}
+.hchip.on{background:linear-gradient(135deg,rgba(244,136,154,.15),rgba(201,168,224,.15));
+  border-color:var(--pk2);box-shadow:0 2px 8px var(--sh);transform:scale(1.1)}
 /* sliders */
 .sliders{display:flex;flex-direction:column;gap:.9rem}
 .sl-row{display:flex;flex-direction:column;gap:4px}
@@ -180,12 +174,10 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.22)}
       <span>メンバーカラーに合わせてカスタムできるよ</span>
     </div>
   </div>
-  <div class="swatch-lbl">カラーを選ぶ</div>
-  <div class="swatch-grid" id="swatchGrid"></div>
-  <div class="custom-row">
-    <label for="customColorPick">🎨 その他のカラー</label>
-    <input type="color" id="customColorPick" value="#ff6b9d">
-    <span style="font-size:.67rem;color:var(--txs)">タップして自由に選んでね</span>
+  <div class="swatch-lbl">ハートを選ぶ（複数OK）</div>
+  <div class="heart-chip-wrap" id="heartChipWrap"></div>
+  <div style="font-size:.63rem;color:var(--txs);margin-top:.45rem;line-height:1.5">
+    ※ 何も選ばないとピンク系ハートを使うよ
   </div>
 </div>
 
@@ -253,8 +245,6 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.22)}
 //  UI STATE（data.js / converter.js の定数を使う）
 // ══════════════════════════════════════
 let converter    = new HobiConverter({ vocab: VOCAB, emojiPairs: EMOJI_PAIRS, kaomoji: KAOMOJI });
-let activeHtIdx  = 0;
-let customHex    = null;
 let lastResult   = "";
 let htActive     = new Set(DEFAULT_HASHTAGS);
 let customHts    = [];
@@ -292,38 +282,39 @@ for(let i=0;i<8;i++) setTimeout(spawnDeco,i*1700);
 setInterval(spawnDeco,3500);
 
 // ══════════════════════════════════════
-//  HEART COLOR UI  （data.js の HEART_COLORS を使う）
+//  HEART CHIP UI  （data.js の HEART_COLORS を使う）
 // ══════════════════════════════════════
-function getActiveHeart(){
-  if(customHex) return { name:"カスタム", color:customHex, heart:"🤍" };
-  return HEART_COLORS[activeHtIdx];
+let selHearts = new Set();   // 選択中のハート絵文字
+
+function getActiveHearts(){
+  // 選択があればそれを返す、なければデフォルト
+  return selHearts.size > 0 ? [...selHearts] : ["🩷"];
+}
+function getPreviewHeart(){
+  return getActiveHearts()[0];
 }
 function updateHeartPreview(){
-  const h=getActiveHeart();
-  $("heartPreview").textContent=h.heart;
-  $("heartColorName").textContent=h.name;
-  document.documentElement.style.setProperty("--heart", h.color);
+  const h = getPreviewHeart();
+  $("heartPreview").textContent = h;
+  // 選択名表示
+  const names = selHearts.size > 0
+    ? HEART_COLORS.filter(c => selHearts.has(c.heart)).map(c => c.name).join("・")
+    : "ピンク（デフォルト）";
+  $("heartColorName").textContent = names;
 }
-function initSwatches(){
-  const g=$("swatchGrid");
-  HEART_COLORS.forEach((h,i)=>{
-    const sw=document.createElement("button");
-    sw.className="sw"+(i===0?" on":"");
-    sw.style.background=h.color;
-    sw.title=h.name;
-    sw.onclick=()=>{
-      customHex=null;
-      activeHtIdx=i;
-      document.querySelectorAll(".sw").forEach(s=>s.classList.remove("on"));
-      sw.classList.add("on");
+function initHeartChips(){
+  const w = $("heartChipWrap");
+  HEART_COLORS.forEach(h => {
+    const c = document.createElement("button");
+    c.className = "hchip";
+    c.textContent = h.heart;
+    c.title = h.name;
+    c.onclick = () => {
+      if(selHearts.has(h.heart)){ selHearts.delete(h.heart); c.classList.remove("on"); }
+      else { selHearts.add(h.heart); c.classList.add("on"); }
       updateHeartPreview();
     };
-    g.appendChild(sw);
-  });
-  $("customColorPick").addEventListener("input", e=>{
-    customHex=e.target.value;
-    document.querySelectorAll(".sw").forEach(s=>s.classList.remove("on"));
-    updateHeartPreview();
+    w.appendChild(c);
   });
 }
 
@@ -369,7 +360,7 @@ function renderHtWrap(){
 //  CONVERT  （converter.js の HobiConverter を使う）
 // ══════════════════════════════════════
 async function onCvt(e, retry=false){
-  if(e) heartPop(e.clientX, e.clientY+window.scrollY, getActiveHeart().heart);
+  if(e) heartPop(e.clientX, e.clientY+window.scrollY, getPreviewHeart());
   const inputText=$("inputText").value.trim();
   const selfName =$("selfName").value.trim()||"私";
   const oshiName =$("oshiName").value.trim()||"推し";
@@ -385,7 +376,7 @@ async function onCvt(e, retry=false){
       inputText,
       selfName,
       oshiName,
-      heartEmoji:     getActiveHeart().heart,
+      heartEmojis:    getActiveHearts(),
       intensity:      +$("intensity").value,
       emojiLevel:     +$("emojiLevel").value,
       lineBreakLevel: +$("lineBreak").value,
@@ -402,7 +393,7 @@ async function onCvt(e, retry=false){
 
     $("outCard").classList.add("show");
     const rect=$("outCard").getBoundingClientRect();
-    heartPop(rect.left+rect.width/2, rect.top+window.scrollY+50, getActiveHeart().heart);
+    heartPop(rect.left+rect.width/2, rect.top+window.scrollY+50, getPreviewHeart());
     showToast(retry?"再変換したよ🔁":"変換できたよ🎀 投稿してね！");
     setTimeout(()=>$("outCard").scrollIntoView({behavior:"smooth",block:"nearest"}),100);
 
@@ -438,7 +429,7 @@ document.addEventListener("keydown", e=>{
 });
 
 // ── BOOT ──────────────────────────────
-initSwatches();
+initHeartChips();
 initSliders();
 renderHtWrap();
 updateHeartPreview();
