@@ -37,29 +37,12 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .card:nth-child(4){animation-delay:.16s}.card:nth-child(5){animation-delay:.21s}
 .ct{font-size:.71rem;font-weight:700;color:var(--pk2);letter-spacing:.09em;margin-bottom:1rem;display:flex;align-items:center;gap:6px}
 .ct::before{content:'';width:6px;height:6px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--pk2),var(--pu))}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
-@media(max-width:460px){.g2{grid-template-columns:1fr}}
 .ig label{display:block;font-size:.7rem;color:var(--txs);margin-bottom:4px;font-weight:500}
-.ig input,.ig textarea{width:100%;border:1.5px solid rgba(255,183,197,.38);border-radius:11px;
+.ig textarea{width:100%;border:1.5px solid rgba(255,183,197,.38);border-radius:11px;
   padding:.58rem .85rem;font-family:'Zen Maru Gothic',sans-serif;font-size:.88rem;
-  color:var(--tx);background:var(--pk3);outline:none;transition:all .18s;resize:none}
-.ig input:focus,.ig textarea:focus{border-color:var(--pk2);background:#fff;box-shadow:0 0 0 3px rgba(244,136,154,.11)}
-.ig textarea{min-height:120px;line-height:1.75}
-/* heart */
-.heart-preview{display:flex;align-items:center;gap:.8rem;padding:.7rem 1rem;background:var(--pk3);
-  border-radius:12px;border:1.5px solid rgba(255,183,197,.3);margin-bottom:.9rem}
-.heart-icon{font-size:1.8rem}
-.heart-preview-txt strong{color:var(--tx);font-size:.88rem;display:block}
-.heart-preview-txt span{font-size:.72rem;color:var(--txs)}
-.swatch-lbl{font-size:.7rem;color:var(--txs);font-weight:600;margin-bottom:.45rem}
-.heart-chip-wrap{display:flex;flex-wrap:wrap;gap:.4rem}
-.hchip{border:2px solid rgba(200,150,180,.2);border-radius:9px;padding:.25rem .48rem;
-  font-size:1.1rem;cursor:pointer;background:var(--pk3);transition:all .15s;
-  line-height:1.3;user-select:none}
-.hchip:hover{border-color:var(--pk2);transform:scale(1.08)}
-.hchip.on{background:linear-gradient(135deg,rgba(244,136,154,.15),rgba(201,168,224,.15));
-  border-color:var(--pk2);box-shadow:0 2px 8px var(--sh);transform:scale(1.1)}
-/* sliders */
+  color:var(--tx);background:var(--pk3);outline:none;transition:all .18s;resize:none;
+  min-height:120px;line-height:1.75}
+.ig textarea:focus{border-color:var(--pk2);background:#fff;box-shadow:0 0 0 3px rgba(244,136,154,.11)}
 .sliders{display:flex;flex-direction:column;gap:.9rem}
 .sl-row{display:flex;flex-direction:column;gap:4px}
 .sl-h{display:flex;justify-content:space-between;align-items:center}
@@ -71,21 +54,18 @@ input[type=range]{-webkit-appearance:none;width:100%;height:4px;
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;height:17px;border-radius:50%;
   background:linear-gradient(135deg,var(--pk2),var(--pu));box-shadow:0 2px 7px rgba(244,136,154,.35);transition:transform .13s}
 input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.22)}
-/* btn */
 .btn-cvt{width:100%;background:linear-gradient(135deg,var(--pk2) 0%,#e87fa0 48%,var(--pu) 100%);
   color:#fff;border:none;border-radius:13px;padding:.95rem;
   font-family:'Zen Maru Gothic',sans-serif;font-size:.97rem;font-weight:700;
   cursor:pointer;letter-spacing:.05em;box-shadow:0 5px 20px rgba(244,136,154,.34);
-  position:relative;overflow:hidden;transition:all .2s;margin-top:.45rem}
+  transition:all .2s;margin-top:.45rem}
 .btn-cvt:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 26px rgba(244,136,154,.45)}
 .btn-cvt:disabled{opacity:.58;cursor:not-allowed;transform:none}
-/* loading */
 #loadW{display:none}
 .ld-in{display:flex;align-items:center;justify-content:center;gap:9px;padding:1.25rem;color:var(--txs);font-size:.8rem}
 .dots span{width:6px;height:6px;border-radius:50%;display:inline-block;animation:dB 1.2s ease-in-out infinite}
 .dots span:nth-child(1){background:var(--pk2)}.dots span:nth-child(2){background:#e087a0;animation-delay:.2s}.dots span:nth-child(3){background:var(--pu);animation-delay:.4s}
 @keyframes dB{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-7px)}}
-/* output */
 #outCard{display:none}#outCard.show{display:block}
 .stats-wrap{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.8rem}
 .sbadge{font-size:.66rem;font-weight:600;padding:2px 9px;border-radius:99px;background:var(--pk3);color:var(--txs);border:1px solid rgba(255,183,197,.35)}
@@ -108,7 +88,6 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.22)}
   box-shadow:0 3px 12px rgba(29,155,240,.26)}
 .tweet-btn:hover{transform:translateY(-1px)}
 .tweet-btn svg{width:14px;height:14px;fill:#fff;flex-shrink:0}
-/* err / toast / hp */
 .err{background:#fff0f0;border:1.5px solid #ffb3b3;color:#c0392b;border-radius:13px;
   padding:.85rem .95rem;font-size:.78rem;line-height:1.65;display:none;margin-bottom:.8rem}
 .err.show{display:block}
@@ -129,10 +108,8 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.22)}
 <div class="hd">
   <div class="hd-badge">🎀 HOBBY ACCOUNT CONVERTER</div>
   <h1>ホビ垢構文<em>変換ちゃん</em></h1>
-  <p class="hd-sub">普通の感想をうざかわいいホビ垢構文に変換するよ ✨<br>強度とハートカラーをカスタムして投稿まで一気にできるよ 💭</p>
+  <p class="hd-sub">普通の感想をうざかわいいホビ垢構文に変換するよ ✨<br>強度をカスタムして投稿まで一気にできるよ 💭</p>
 </div>
-
-
 
 <div class="card">
   <div class="ct">強度カスタム</div>
@@ -186,59 +163,84 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.22)}
 <div class="toast" id="toast"></div>
 
 <script>
-// ★ Cloudflare WorkerのURLをここに設定してね ★
+// ★ Cloudflare WorkerのURL ★
 const WORKER_URL = "https://throbbing-wind-3f73.9annak-sub.workers.dev";
 
-
-const KAOMOJI=["ദ്ദിᐢ- ̫-ᐢ₎","˘ ᴗ  ̫ ᴗ ˘","ᐡ• ·̫ •̥ᐡ","( ᴖ ̫ᴖ )","ᐡ⸝⸝⊃ ·̭ •̥ ⸝⸝ᐡ","ᵕ ̥_ .̫ _ ̥ᵕ","꒰ – ·̫ – ꒱ﾉ","(ᐡ｡› ·̫ ‹｡ᐡ )੭","(ᐡㅠ ‧̫ ㅠᐡ)","ᐡ⸝⸝> ·̫ <⸝⸝ᐡ"];
-const EMOJI_PAIRS=["👼🏻💞","🆗💘","👶🏻🎀","😽💞","🪄✨","🐻‍❄️🩵","✊🏻🌟","😭👈🏻","🆙💖","🥲🩶","🐑💤","🍒💬","💯✨","🎀🩶","💭🎀","😻❤️‍🔥","🤩💖","🥂🫧","😿🌀","🤝🏻🌟","🍼🩵","💮✨","😭⤴️"];
-const VOCAB={
-  greeting:["ずっしょ","にっこり","出席確認","答え合わせ","浮かれぽんち","モチベなくて","今日行くか迷ったんだけど","ふたりぼっちの世界","しんだ","満身創痍"],
-  praise:["にゃーーいすき","できる男","しごでき","あまあま","ゲロ甘","いとちー","とくベチュ","はなまる","だいてんさいさん","ときめきこんてんChu","大满足","だいすきだいすき"],
-  thanks:["見つけてくれて","覚えてくれて","一生忘れられない","いちばん大切にしてくれて","過去一時間使ってくれて","初めて見る顔してくれて","大満足させてくれる","好きでいさせてくれてありがとう","しあわせ空間","いっぱいありがとう","これからもずーっと","たくさん考えてくれて","抱えきれないしあわせ","予想以上のことしてくれて","指名してくれた","戻ってきてくれて"],
-  bodyReaction:["心臓くるしー","心臓とくんとする","にんまり","顔ない","帰り道","抱えきれなくて幸せ歩いた","転げ落ちるくらいドカ笑いさせてくれて","記憶喪失","すきすぎスキップ帰宅"],
-  special:["ひみつ","ずるい","特別","奇跡","リベンジ","ここでいけると思ってなくてびっくりした","天井だったのに見つけてくれた","行動で示してくれた","特等席","答え合わせ"],
-  negative:["納得いく反応じゃなかったけど","困らせちゃってごめんね","わがままに付き合わせちゃってごめんね"],
-  oshiDynamic:["{O}も100点だった","{O}がしてくれること全部たからもの","{O}だいすき増した","{O}の特等席！","{O}しか{S}のこと管理できない","{O}が{S}のこと見る時の顔がいちばん好き","{S}を喜ばせる天才","{S}のこと全部わかってる","{S}@しあわせもの","頼んでないのに自分からやってくるのずるい","骨埋めた","墓立てた","{O}しかいないんだ","{O}もせかいいちしあわせでいてほしい","{S}のこと幸せにしてくれるひと"],
+// ── データ定義 ────────────────────────────────────────────
+const KAOMOJI = [
+  "ദ്ദിᐢ- ̫-ᐢ₎","˘ ᴗ  ̫ ᴗ ˘","ᐡ• ·̫ •̥ᐡ","( ᴖ ̫ᴖ )",
+  "ᐡ⸝⸝⊃ ·̭ •̥ ⸝⸝ᐡ","ᵕ ̥_ .̫ _ ̥ᵕ","꒰ – ·̫ – ꒱ﾉ",
+  "(ᐡ｡› ·̫ ‹｡ᐡ )੭","(ᐡㅠ ‧̫ ㅠᐡ)","ᐡ⸝⸝> ·̫ <⸝⸝ᐡ",
+];
+const EMOJI_PAIRS = [
+  "👼🏻💞","🆗💘","👶🏻🎀","😽💞","🪄✨","🐻‍❄️🩵",
+  "✊🏻🌟","😭👈🏻","🆙💖","🥲🩶","🐑💤","🍒💬",
+  "💯✨","🎀🩶","💭🎀","😻❤️‍🔥","🤩💖","🥂🫧",
+  "😿🌀","🤝🏻🌟","🍼🩵","💮✨","😭⤴️",
+];
+const VOCAB = {
+  greeting:     ["ずっしょ","にっこり","出席確認","答え合わせ","浮かれぽんち","モチベなくて","今日行くか迷ったんだけど","ふたりぼっちの世界","しんだ","満身創痍"],
+  praise:       ["にゃーーいすき","できる男","しごでき","あまあま","ゲロ甘","いとちー","とくベチュ","はなまる","だいてんさいさん","ときめきこんてんChu","大满足","だいすきだいすき"],
+  thanks:       ["見つけてくれて","覚えてくれて","一生忘れられない","いちばん大切にしてくれて","過去一時間使ってくれて","初めて見る顔してくれて","大満足させてくれる","好きでいさせてくれてありがとう","しあわせ空間","いっぱいありがとう","これからもずーっと","たくさん考えてくれて","抱えきれないしあわせ","予想以上のことしてくれて","指名してくれた","戻ってきてくれて"],
+  bodyReaction: ["心臓くるしー","心臓とくんとする","にんまり","顔ない","帰り道","抱えきれなくて幸せ歩いた","転げ落ちるくらいドカ笑いさせてくれて","記憶喪失","すきすぎスキップ帰宅"],
+  special:      ["ひみつ","ずるい","特別","奇跡","リベンジ","ここでいけると思ってなくてびっくりした","天井だったのに見つけてくれた","行動で示してくれた","特等席","答え合わせ"],
+  negative:     ["納得いく反応じゃなかったけど","困らせちゃってごめんね","わがままに付き合わせちゃってごめんね"],
+  oshiDynamic:  ["推しも100点だった","推しがしてくれること全部たからもの","推しだいすき増した","推しの特等席！","推ししかわたしのこと管理できない","推しがわたしのこと見る時の顔がいちばん好き","わたしを喜ばせる天才","わたしのこと全部わかってる","わたし@しあわせもの","頼んでないのに自分からやってくるのずるい","骨埋めた","墓立てた","推ししかいないんだ","推しもせかいいちしあわせでいてほしい","わたしのこと幸せにしてくれるひと"],
 };
 
-const $=id=>document.getElementById(id);
-const pickN=(arr,n)=>[...arr].sort(()=>Math.random()-.5).slice(0,Math.min(n,arr.length));
-const fillN=(t,o,s)=>t.replace(/\{O\}/g,o).replace(/\{S\}/g,s);
-let lastResult="";
+// ── ユーティリティ ────────────────────────────────────────
+const $ = id => document.getElementById(id);
+const pickN = (arr, n) => [...arr].sort(() => Math.random() - .5).slice(0, Math.min(n, arr.length));
+let lastResult = "";
 
-
-function updSl(el,lid,labels){
-  const v=+el.value;
-  $(lid).textContent=labels[v<=33?0:v<=66?1:2];
-  el.style.setProperty("--pct",v+"%");
+// ── スライダー ────────────────────────────────────────────
+function updSl(el, lid, labels) {
+  const v = +el.value;
+  $(lid).textContent = labels[v <= 33 ? 0 : v <= 66 ? 1 : 2];
+  el.style.setProperty("--pct", v + "%");
 }
-function initSliders(){["intensity","emojiLevel","lineBreak"].forEach(id=>{const el=$(id);el.style.setProperty("--pct",el.value+"%")})}
+function initSliders() {
+  ["intensity","emojiLevel","lineBreak"].forEach(id => {
+    const el = $(id);
+    el.style.setProperty("--pct", el.value + "%");
+  });
+}
 
-function buildPrompt(inputText){
-  const iv=+$("intensity").value,ev=+$("emojiLevel").value,lv=+$("lineBreak").value;
-  const heartNote=hearts.length===1?`ハートの絵文字は「${hearts[0]}」を使う（メンバーカラー）`:`ハートの絵文字は「${hearts.join("」「")}」をバランスよく混ぜて使う（メンバーカラー）`;
-  const iRule=iv<=33?"感情表現はやや控えめ・読みやすさ重視":iv<=66?"ホビ垢らしい感情表現・語録を適切に盛り込む":"感情全開・語録最大活用・誇張表現多め・重ため";
-  const eRule=ev<=33?"絵文字は文末に1〜2個":ev<=66?"絵文字は4〜6個（適度）":"絵文字は8個以上・ほぼ毎フレーズにつける";
-  const lRule=lv<=33?"改行少なめ・1〜2文まとめる":lv<=66?"3〜4フレーズごとに改行":"1フレーズごとに改行・ホビ垢特有の細かいテンポ";
-  const emojiSample=pickN(EMOJI_PAIRS,8).join(" ");
-  const kaoSample=pickN(KAOMOJI,3).join("  ");
-  const greet=pickN(VOCAB.greeting,3).join("、"),pr=pickN(VOCAB.praise,4).join("、"),th=pickN(VOCAB.thanks,4).join("、");
-  const br=pickN(VOCAB.bodyReaction,3).join("、"),sp=pickN(VOCAB.special,3).join("、");
-  const od=pickN(VOCAB.oshiDynamic,5).map(t=>fillN(t)).join("、");
-  const txt=inputText;
-  const hints=[
-    /ライブ|現場|コンサート|公演|舞台|イベ|チェキ|握手|対面/.test(txt)&&"現場・イベント系",
-    /目が合|見てくれ|見つけ|視線|指名/.test(txt)&&"目が合う・認識エピソード",
-    /嬉し|幸せ|楽し|最高|よかっ|好き|かわい/.test(txt)&&"ポジティブ感情",
-    /悲し|泣|辛|切な|苦し/.test(txt)&&"ネガティブ感情",
-    /笑|ニコ|にこ/.test(txt)&&"笑顔エピソード",
-    /覚え|名前/.test(txt)&&"覚えてもらったエピソード",
-  ].filter(Boolean).join("、")||"特になし";
+// ── プロンプト構築 ────────────────────────────────────────
+function buildPrompt(inputText) {
+  const iv = +$("intensity").value;
+  const ev = +$("emojiLevel").value;
+  const lv = +$("lineBreak").value;
+
+  const iRule = iv <= 33 ? "感情表現はやや控えめ・読みやすさ重視"
+              : iv <= 66 ? "ホビ垢らしい感情表現・語録を適切に盛り込む"
+              : "感情全開・語録最大活用・誇張表現多め・重ため";
+  const eRule = ev <= 33 ? "絵文字は文末に1〜2個"
+              : ev <= 66 ? "絵文字は4〜6個（適度）"
+              : "絵文字は8個以上・ほぼ毎フレーズにつける";
+  const lRule = lv <= 33 ? "改行少なめ・1〜2文まとめる"
+              : lv <= 66 ? "3〜4フレーズごとに改行"
+              : "1フレーズごとに改行・ホビ垢特有の細かいテンポ";
+
+  const emojiSample = pickN(EMOJI_PAIRS, 8).join(" ");
+  const kaoSample   = pickN(KAOMOJI, 3).join("  ");
+  const greet = pickN(VOCAB.greeting, 3).join("、");
+  const pr    = pickN(VOCAB.praise, 4).join("、");
+  const th    = pickN(VOCAB.thanks, 4).join("、");
+  const br    = pickN(VOCAB.bodyReaction, 3).join("、");
+  const sp    = pickN(VOCAB.special, 3).join("、");
+  const od    = pickN(VOCAB.oshiDynamic, 5).join("、");
+
+  const hints = [
+    /ライブ|現場|コンサート|公演|舞台|イベ|チェキ|握手|対面/.test(inputText) && "現場・イベント系",
+    /目が合|見てくれ|見つけ|視線|指名/.test(inputText)                       && "目が合う・認識エピソード",
+    /嬉し|幸せ|楽し|最高|よかっ|好き|かわい/.test(inputText)                 && "ポジティブ感情",
+    /悲し|泣|辛|切な|苦し/.test(inputText)                                   && "ネガティブ感情",
+    /笑|ニコ|にこ/.test(inputText)                                           && "笑顔エピソード",
+    /覚え|名前/.test(inputText)                                              && "覚えてもらったエピソード",
+  ].filter(Boolean).join("、") || "特になし";
 
   return `あなたは「ホビ垢（趣味アカウント）」を運用しているオタクになりきり、感想をホビ垢構文に変換します。
-
-
 
 ## ホビ垢構文の本質
 ・感想ではなく「自分と推しの関係性の物語」として語る
@@ -251,13 +253,12 @@ function buildPrompt(inputText){
 ・ひらがな多用（だいすき・しあわせ・ありがとう・すきすぎ等）
 
 ## 絵文字・顔文字ルール
-・${heartNote}
 ・${eRule}
 ・使用する絵文字ペア候補: ${emojiSample}
 ・顔文字を文中に1〜2個自然に挿入: ${kaoSample}
 ・号泣の絵文字等は連続して3つほど使用する
-・wwwwなどをつかうおもしろいことを語るときは全角の小文字ｗｗｗを使用する
-・ドキドキする、楽しみな時は「┣¨‡ ┣¨‡」を文末につける
+・面白いことを語るときは全角小文字ｗｗｗを使用する
+・ドキドキ・楽しみな時は「┣¨‡ ┣¨‡」を文末につける
 
 ## 強度・形式ルール
 ・強度: ${iRule}
@@ -278,71 +279,111 @@ function buildPrompt(inputText){
 ${inputText}`;
 }
 
-function showToast(msg,dur=2200){const t=$("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),dur)}
-function heartPop(x,y){
-  for(let i=0;i<6;i++){
-    setTimeout(()=>{
-      const el=document.createElement("div");
-      el.className="hp";
-      el.textContent="🩷";
-      el.style.cssText=`font-size:${1+Math.random()*.6}rem;
-      left:${x+(Math.random()-.5)*70}px;
-      top:${y+(Math.random()-.5)*50}px`;
+// ── UI ───────────────────────────────────────────────────
+function showToast(msg, dur = 2200) {
+  const t = $("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), dur);
+}
+function heartPop(x, y) {
+  for (let i = 0; i < 6; i++) {
+    setTimeout(() => {
+      const el = document.createElement("div");
+      el.className = "hp";
+      el.textContent = "🩷";
+      el.style.cssText = `font-size:${1 + Math.random() * .6}rem;left:${x + (Math.random() - .5) * 70}px;top:${y + (Math.random() - .5) * 50}px`;
       document.body.appendChild(el);
-      setTimeout(()=>el.remove(),1200);
-    },i*60);
+      setTimeout(() => el.remove(), 1200);
+    }, i * 60);
   }
 }
-const DECOS=["🎀","🤍","⭐","🌸","💭","✨","🏆","🌷"];
-function spawnDeco(){const el=document.createElement("div");el.className="deco";el.textContent=DECOS[Math.floor(Math.random()*DECOS.length)];el.style.left=(Math.random()*100)+"vw";el.style.fontSize=(1+Math.random()*1.3)+"rem";const d=12+Math.random()*9;el.style.animationDuration=d+"s";el.style.animationDelay=(Math.random()*3)+"s";document.body.appendChild(el);setTimeout(()=>el.remove(),(d+5)*1000)}
-for(let i=0;i<8;i++)setTimeout(spawnDeco,i*1700);setInterval(spawnDeco,3500);
 
-async function onCvt(e,retry=false){
-  if(!inputText){showToast("感想を入力してね💭");$("inputText").focus();return;}
-  const btn=$("cvtBtn");btn.disabled=true;
-  $("loadW").style.display="block";
+// 浮遊デコ
+const DECOS = ["🎀","🤍","⭐","🌸","💭","✨","🏆","🌷"];
+function spawnDeco() {
+  const el = document.createElement("div");
+  el.className = "deco";
+  el.textContent = DECOS[Math.floor(Math.random() * DECOS.length)];
+  el.style.left = (Math.random() * 100) + "vw";
+  el.style.fontSize = (1 + Math.random() * 1.3) + "rem";
+  const d = 12 + Math.random() * 9;
+  el.style.animationDuration = d + "s";
+  el.style.animationDelay = (Math.random() * 3) + "s";
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), (d + 5) * 1000);
+}
+for (let i = 0; i < 8; i++) setTimeout(spawnDeco, i * 1700);
+setInterval(spawnDeco, 3500);
+
+// ── 変換 ─────────────────────────────────────────────────
+async function onCvt(e, retry = false) {
+  if (e) heartPop(e.clientX, e.clientY + window.scrollY);
+
+  const inputText = $("inputText").value.trim();
+  if (!inputText) { showToast("感想を入力してね💭"); $("inputText").focus(); return; }
+
+  const btn = $("cvtBtn");
+  btn.disabled = true;
+  $("loadW").style.display = "block";
   $("outCard").classList.remove("show");
   $("errMsg").classList.remove("show");
-  try{
-    const prompt=buildPrompt(inputText,selfName,oshiName);
-    const res=await fetch(WORKER_URL,{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({prompt}),
+
+  try {
+    const prompt = buildPrompt(inputText);
+    const res = await fetch(WORKER_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt }),
     });
-    const data=await res.json();
-    if(!res.ok||data.error)throw new Error(data.error||"変換に失敗したよ");
-    lastResult=data.result;
-    $("outTxt").textContent=lastResult;
-    const chars=lastResult.length,lines=(lastResult.match(/\n/g)||[]).length+1;
-    const emojis=(lastResult.match(/[\u{1F300}-\u{1FFFF}\u{2600}-\u{27BF}]/gu)||[]).length;
-    $("statsWrap").innerHTML=`<span class="sbadge">${chars}字</span><span class="sbadge">${lines}行</span><span class="sbadge">${emojis}絵文字</span>`;
+    const data = await res.json();
+    if (!res.ok || data.error) throw new Error(data.error || "変換に失敗したよ");
+
+    lastResult = data.result;
+    $("outTxt").textContent = lastResult;
+
+    const chars  = lastResult.length;
+    const lines  = (lastResult.match(/\n/g) || []).length + 1;
+    const emojis = (lastResult.match(/[\u{1F300}-\u{1FFFF}\u{2600}-\u{27BF}]/gu) || []).length;
+    $("statsWrap").innerHTML =
+      `<span class="sbadge">${chars}字</span>` +
+      `<span class="sbadge">${lines}行</span>` +
+      `<span class="sbadge">${emojis}絵文字</span>`;
+
     $("outCard").classList.add("show");
-    const rect=$("outCard").getBoundingClientRect();
-    showToast(retry?"再変換したよ🔁":"変換できたよ🎀 投稿してね！");
-    setTimeout(()=>$("outCard").scrollIntoView({behavior:"smooth",block:"nearest"}),100);
-  }catch(err){
-    const el=$("errMsg");el.textContent="エラーが出ちゃった…💦 "+err.message;el.classList.add("show");
-  }finally{
-    $("loadW").style.display="none";btn.disabled=false;
+    showToast(retry ? "再変換したよ🔁" : "変換できたよ🎀 投稿してね！");
+    setTimeout(() => $("outCard").scrollIntoView({ behavior: "smooth", block: "nearest" }), 100);
+
+  } catch (err) {
+    const el = $("errMsg");
+    el.textContent = "エラーが出ちゃった…💦 " + err.message;
+    el.classList.add("show");
+  } finally {
+    $("loadW").style.display = "none";
+    btn.disabled = false;
   }
 }
 
-async function doCopy(){
-  if(!lastResult){showToast("先に変換してね💭");return;}
-  await navigator.clipboard.writeText(lastResult).catch(()=>{});
-  const b=$("copyBtn");b.textContent="✓ コピー完了";b.classList.add("done");
+async function doCopy() {
+  if (!lastResult) { showToast("先に変換してね💭"); return; }
+  await navigator.clipboard.writeText(lastResult).catch(() => {});
+  const b = $("copyBtn");
+  b.textContent = "✓ コピー完了";
+  b.classList.add("done");
   showToast("コピーしたよ🎀");
-  setTimeout(()=>{b.textContent="📋 コピー";b.classList.remove("done")},2000);
+  setTimeout(() => { b.textContent = "📋 コピー"; b.classList.remove("done"); }, 2000);
 }
 
-function doTweet(){
-  if(!lastResult){showToast("先に変換してね💭");return;}
-  const ht="\n\n#ホビ垢構文ジェネレーター #ホビ垢 #推し活";
-  window.open("https://twitter.com/intent/tweet?text="+encodeURIComponent(lastResult+ht),"_blank","noopener");
+function doTweet() {
+  if (!lastResult) { showToast("先に変換してね💭"); return; }
+  const ht = "\n\n#ホビ垢構文ジェネレーター #ホビ垢 #推し活";
+  window.open("https://twitter.com/intent/tweet?text=" + encodeURIComponent(lastResult + ht), "_blank", "noopener");
 }
 
-document.addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key==="Enter")onCvt(null)});
+document.addEventListener("keydown", e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === "Enter") onCvt(null);
+});
+
 initSliders();
 </script>
 </body>
