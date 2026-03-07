@@ -132,27 +132,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.22)}
   <p class="hd-sub">普通の感想をうざかわいいホビ垢構文に変換するよ ✨<br>強度とハートカラーをカスタムして投稿まで一気にできるよ 💭</p>
 </div>
 
-<div class="card">
-  <div class="ct">ユーザー設定</div>
-  <div class="g2">
-    <div class="ig"><label>🙋 自分の名前</label><input id="selfName" type="text" placeholder="私" maxlength="20"></div>
-    <div class="ig"><label>⭐ 推しの名前</label><input id="oshiName" type="text" placeholder="推し" maxlength="20"></div>
-  </div>
-</div>
 
-<div class="card">
-  <div class="ct">ハートカラー</div>
-  <div class="heart-preview">
-    <div class="heart-icon" id="heartPreview">🩷</div>
-    <div class="heart-preview-txt">
-      <strong id="heartColorName">ピンク（デフォルト）</strong>
-      <span>メンバーカラーに合わせてカスタムできるよ</span>
-    </div>
-  </div>
-  <div class="swatch-lbl">ハートを選ぶ（複数OK）</div>
-  <div class="heart-chip-wrap" id="heartChipWrap"></div>
-  <div class="hint">※ 何も選ばないとピンク系ハートを使うよ</div>
-</div>
 
 <div class="card">
   <div class="ct">強度カスタム</div>
@@ -209,17 +189,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.22)}
 // ★ Cloudflare WorkerのURLをここに設定してね ★
 const WORKER_URL = "https://throbbing-wind-3f73.9annak-sub.workers.dev";
 
-const HEART_COLORS = [
-  {name:"ピンク",heart:"🩷"},{name:"レッド",heart:"❤️"},
-  {name:"オレンジ",heart:"🧡"},{name:"イエロー",heart:"💛"},
-  {name:"グリーン",heart:"💚"},{name:"ライトブルー",heart:"🩵"},
-  {name:"ブルー",heart:"💙"},{name:"パープル",heart:"💜"},
-  {name:"ホワイト",heart:"🤍"},{name:"ブラック",heart:"🖤"},
-  {name:"ブラウン",heart:"🤎"},{name:"グレー",heart:"🩶"},
-  {name:"レッドリボン",heart:"❤️‍🔥"},{name:"スパークル",heart:"💖"},
-  {name:"ドット",heart:"💗"},{name:"カーリー",heart:"💓"},
-  {name:"アロー",heart:"💘"},{name:"感嘆",heart:"❣️"},
-];
+
 const KAOMOJI=["ദ്ദിᐢ- ̫-ᐢ₎","˘ ᴗ  ̫ ᴗ ˘","ᐡ• ·̫ •̥ᐡ","( ᴖ ̫ᴖ )","ᐡ⸝⸝⊃ ·̭ •̥ ⸝⸝ᐡ","ᵕ ̥_ .̫ _ ̥ᵕ","꒰ – ·̫ – ꒱ﾉ","(ᐡ｡› ·̫ ‹｡ᐡ )੭","(ᐡㅠ ‧̫ ㅠᐡ)","ᐡ⸝⸝> ·̫ <⸝⸝ᐡ"];
 const EMOJI_PAIRS=["👼🏻💞","🆗💘","👶🏻🎀","😽💞","🪄✨","🐻‍❄️🩵","✊🏻🌟","😭👈🏻","🆙💖","🥲🩶","🐑💤","🍒💬","💯✨","🎀🩶","💭🎀","😻❤️‍🔥","🤩💖","🥂🫧","😿🌀","🤝🏻🌟","🍼🩵","💮✨","😭⤴️"];
 const VOCAB={
@@ -235,29 +205,9 @@ const VOCAB={
 const $=id=>document.getElementById(id);
 const pickN=(arr,n)=>[...arr].sort(()=>Math.random()-.5).slice(0,Math.min(n,arr.length));
 const fillN=(t,o,s)=>t.replace(/\{O\}/g,o).replace(/\{S\}/g,s);
-let selHearts=new Set(), lastResult="";
+let lastResult="";
 
-function getActiveHearts(){return selHearts.size>0?[...selHearts]:["🩷"]}
-function getPreviewHeart(){return getActiveHearts()[0]}
 
-function updateHeartPreview(){
-  $("heartPreview").textContent=getPreviewHeart();
-  const names=selHearts.size>0?HEART_COLORS.filter(c=>selHearts.has(c.heart)).map(c=>c.name).join("・"):"ピンク（デフォルト）";
-  $("heartColorName").textContent=names;
-}
-function initHeartChips(){
-  const w=$("heartChipWrap");
-  HEART_COLORS.forEach(h=>{
-    const c=document.createElement("button");
-    c.className="hchip"; c.textContent=h.heart; c.title=h.name;
-    c.onclick=()=>{
-      selHearts.has(h.heart)?selHearts.delete(h.heart):selHearts.add(h.heart);
-      c.classList.toggle("on",selHearts.has(h.heart));
-      updateHeartPreview();
-    };
-    w.appendChild(c);
-  });
-}
 function updSl(el,lid,labels){
   const v=+el.value;
   $(lid).textContent=labels[v<=33?0:v<=66?1:2];
@@ -265,9 +215,8 @@ function updSl(el,lid,labels){
 }
 function initSliders(){["intensity","emojiLevel","lineBreak"].forEach(id=>{const el=$(id);el.style.setProperty("--pct",el.value+"%")})}
 
-function buildPrompt(inputText,selfName,oshiName){
+function buildPrompt(inputText){
   const iv=+$("intensity").value,ev=+$("emojiLevel").value,lv=+$("lineBreak").value;
-  const hearts=getActiveHearts();
   const heartNote=hearts.length===1?`ハートの絵文字は「${hearts[0]}」を使う（メンバーカラー）`:`ハートの絵文字は「${hearts.join("」「")}」をバランスよく混ぜて使う（メンバーカラー）`;
   const iRule=iv<=33?"感情表現はやや控えめ・読みやすさ重視":iv<=66?"ホビ垢らしい感情表現・語録を適切に盛り込む":"感情全開・語録最大活用・誇張表現多め・重ため";
   const eRule=ev<=33?"絵文字は文末に1〜2個":ev<=66?"絵文字は4〜6個（適度）":"絵文字は8個以上・ほぼ毎フレーズにつける";
@@ -276,7 +225,7 @@ function buildPrompt(inputText,selfName,oshiName){
   const kaoSample=pickN(KAOMOJI,3).join("  ");
   const greet=pickN(VOCAB.greeting,3).join("、"),pr=pickN(VOCAB.praise,4).join("、"),th=pickN(VOCAB.thanks,4).join("、");
   const br=pickN(VOCAB.bodyReaction,3).join("、"),sp=pickN(VOCAB.special,3).join("、");
-  const od=pickN(VOCAB.oshiDynamic,5).map(t=>fillN(t,oshiName,selfName)).join("、");
+  const od=pickN(VOCAB.oshiDynamic,5).map(t=>fillN(t)).join("、");
   const txt=inputText;
   const hints=[
     /ライブ|現場|コンサート|公演|舞台|イベ|チェキ|握手|対面/.test(txt)&&"現場・イベント系",
@@ -289,16 +238,15 @@ function buildPrompt(inputText,selfName,oshiName){
 
   return `あなたは「ホビ垢（趣味アカウント）」を運用しているオタクになりきり、感想をホビ垢構文に変換します。
 
-## 設定
-- 自分の名前: ${selfName}
-- 推しの名前: ${oshiName}
+
 
 ## ホビ垢構文の本質
-・感想ではなく「${selfName}と${oshiName}の関係性の物語」として語る
+・感想ではなく「自分と推しの関係性の物語」として語る
 ・出来事を奇跡・特別なこととしてロマン化する
-・演者の行動を「${selfName}のためにしてくれた」として解釈する
+・全体的に大げさに語るが、すべてを語るわけではなく、少し内容を濁して書く
+・演者の行動を「自分のためにしてくれた」として解釈する
 ・「見つけてもらった」「覚えてもらった」体験を特別なイベントとして描写する
-・感情は誇張気味に（しんだ・記憶喪失・心臓くるしー・満身創痍など）
+・感情は誇張気味に（しんだ・記憶喪失・心臓くるしーなど）
 ・文法より気持ち優先・文が途中で途切れてもOK
 ・ひらがな多用（だいすき・しあわせ・ありがとう・すきすぎ等）
 
@@ -307,6 +255,9 @@ function buildPrompt(inputText,selfName,oshiName){
 ・${eRule}
 ・使用する絵文字ペア候補: ${emojiSample}
 ・顔文字を文中に1〜2個自然に挿入: ${kaoSample}
+・号泣の絵文字等は連続して3つほど使用する
+・wwwwなどをつかうおもしろいことを語るときは全角の小文字ｗｗｗを使用する
+・ドキドキする、楽しみな時は「┣¨‡ ┣¨‡」を文末につける
 
 ## 強度・形式ルール
 ・強度: ${iRule}
@@ -328,17 +279,25 @@ ${inputText}`;
 }
 
 function showToast(msg,dur=2200){const t=$("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),dur)}
-function heartPop(x,y,e){for(let i=0;i<6;i++)setTimeout(()=>{const el=document.createElement("div");el.className="hp";el.textContent=e||"🩷";el.style.cssText=`font-size:${1+Math.random()*.6}rem;left:${x+(Math.random()-.5)*70}px;top:${y+(Math.random()-.5)*50}px`;document.body.appendChild(el);setTimeout(()=>el.remove(),1200)},i*60)}
-
+function heartPop(x,y){
+  for(let i=0;i<6;i++){
+    setTimeout(()=>{
+      const el=document.createElement("div");
+      el.className="hp";
+      el.textContent="🩷";
+      el.style.cssText=`font-size:${1+Math.random()*.6}rem;
+      left:${x+(Math.random()-.5)*70}px;
+      top:${y+(Math.random()-.5)*50}px`;
+      document.body.appendChild(el);
+      setTimeout(()=>el.remove(),1200);
+    },i*60);
+  }
+}
 const DECOS=["🎀","🤍","⭐","🌸","💭","✨","🏆","🌷"];
 function spawnDeco(){const el=document.createElement("div");el.className="deco";el.textContent=DECOS[Math.floor(Math.random()*DECOS.length)];el.style.left=(Math.random()*100)+"vw";el.style.fontSize=(1+Math.random()*1.3)+"rem";const d=12+Math.random()*9;el.style.animationDuration=d+"s";el.style.animationDelay=(Math.random()*3)+"s";document.body.appendChild(el);setTimeout(()=>el.remove(),(d+5)*1000)}
 for(let i=0;i<8;i++)setTimeout(spawnDeco,i*1700);setInterval(spawnDeco,3500);
 
 async function onCvt(e,retry=false){
-  if(e)heartPop(e.clientX,e.clientY+window.scrollY,getPreviewHeart());
-  const inputText=$("inputText").value.trim();
-  const selfName=$("selfName").value.trim()||"私";
-  const oshiName=$("oshiName").value.trim()||"推し";
   if(!inputText){showToast("感想を入力してね💭");$("inputText").focus();return;}
   const btn=$("cvtBtn");btn.disabled=true;
   $("loadW").style.display="block";
@@ -360,7 +319,6 @@ async function onCvt(e,retry=false){
     $("statsWrap").innerHTML=`<span class="sbadge">${chars}字</span><span class="sbadge">${lines}行</span><span class="sbadge">${emojis}絵文字</span>`;
     $("outCard").classList.add("show");
     const rect=$("outCard").getBoundingClientRect();
-    heartPop(rect.left+rect.width/2,rect.top+window.scrollY+50,getPreviewHeart());
     showToast(retry?"再変換したよ🔁":"変換できたよ🎀 投稿してね！");
     setTimeout(()=>$("outCard").scrollIntoView({behavior:"smooth",block:"nearest"}),100);
   }catch(err){
@@ -385,7 +343,7 @@ function doTweet(){
 }
 
 document.addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key==="Enter")onCvt(null)});
-initHeartChips();initSliders();
+initSliders();
 </script>
 </body>
 </html>
